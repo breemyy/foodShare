@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodShare | Gratis Lebensmittel teilen</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<header>
+    <h1>FoodShare 🍎</h1>
+    <p>Essen retten – lokal & kostenlos</p>
+</header>
+
+<div class="container">
+    <div class="search-container">
+        <input type="text" id="searchBar" placeholder="Suchen nach Obst, Brot, Milch...">
+        <div class="categories">
+            <div class="cat-badge active">Alles</div>
+            <div class="cat-badge">🍎 Obst & Gemüse</div>
+            <div class="cat-badge">🍞 Backwaren</div>
+            <div class="cat-badge">🥛 Kühlregal</div>
+            <div class="cat-badge">🥫 Vorrat</div>
+            <div class="cat-badge">🍽️ Sonstiges</div>
+        </div>
+    </div>
+
+    <div id="foodFeed" class="grid-feed"></div>
+
+    <div class="upload-card">
+        <h3>Neues Essen hochladen</h3>
+        <form id="uploadForm">
+            <div class="image-dropzone" id="dropzone">
+                <span id="dropzone-text">📸 Foto anklicken & hochladen</span>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <div id="previewContainer"></div>
+            </div>
+
+            <div class="input-group">
+                <label>Was verschenkst du?</label>
+                <input type="text" id="titleInput" placeholder="z.B. Zwei Bio-Bananen" required>
+            </div>
+
+            <div class="input-group">
+                <label>Zusätzliche Bemerkungen</label>
+                <input type="text" id="remarksInput" placeholder="z.B. Bitte Behältnis mitbringen 😊">
+            </div>
+
+            <div class="input-group">
+                <label>Kategorie</label>
+                <select id="categorySelect">
+                    <option value="Obst & Gemüse">🍎 Obst & Gemüse</option>
+                    <option value="Backwaren">🍞 Backwaren</option>
+                    <option value="Kühlregal">🥛 Kühlregal</option>
+                    <option value="Vorrat">🥫 Vorratsschrank</option>
+                    <option value="Sonstiges">🍽️ Sonstiges</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="expiry">Haltbar bis ca.</label>
+                <input type="date" id="expiryInput">
+            </div>
+
+            <button type="submit" class="btn-submit">Anzeige erstellen</button>
+        </form>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
