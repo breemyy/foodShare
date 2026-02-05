@@ -67,6 +67,7 @@ uploadForm.addEventListener('submit', async (e) => {
     const category = document.getElementById('categorySelect').value;
     const remarks = document.getElementById('remarksInput').value;
     const expiry = document.getElementById('expiryInput').value;
+    const expiryValue = document.getElementById('expiryInput').value;
 
     const { error } = await supabaseClient
         .from('posts')
