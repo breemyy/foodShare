@@ -113,21 +113,15 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
 .input-group input, .input-group select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #dfe6e9; }
 
 
-.auth-overlay {    
+.auth-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.8); display: flex; align-items: center; 
     justify-content: center; z-index: 1000;
 }
-
 .auth-box {
     background: white; padding: 2rem; border-radius: 12px; 
     text-align: center; width: 90%; max-width: 400px;
 }
-#authOverlay.show {
-    visibility: visible;
-    opacity: 1;
-    pointer-events: auto;
-    
 .auth-box input { width: 100%; margin: 10px 0; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
 .btn-submit { width: 100%; background: var(--text-dark); color: white; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
 
