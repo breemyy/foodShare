@@ -59,6 +59,7 @@ async function handleUpload(e) {
     if (!user) {
         alert("Du musst eingeloggt sein, um etwas zu posten!");
         return;
+    }
 
 uploadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -67,7 +68,7 @@ uploadForm.addEventListener('submit', async (e) => {
         alert("Bitte erst ein Foto hochladen!");
         return;
     }
-
+}
     const title = document.getElementById('titleInput').value;
     const category = document.getElementById('categorySelect').value;
     const remarks = document.getElementById('remarksInput').value;
