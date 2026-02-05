@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Mein Profil - FoodShare</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <button onclick="window.location.href='index.html'">⬅ Zurück</button>
+        <h1>Mein Profil</h1>
+        <div class="profile-edit">
+            <p id="displayUsername">Lade...</p>
+            <button onclick="handleSignOut()">Abmelden</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+    <script>
+        // Kleines Script nur für diese Seite, um Daten anzuzeigen
+        async function loadProfileData() {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) window.location.href = 'index.html';
+
+            const { data } = await supabaseClient
+                .from('profiles')
+                .select('*')
+                .eq('id', user.id)
+                .single();
+            
+            if (data) {
+                document.getElementById('displayUsername').innerText = "Nutzername: " + data.username;
+            }
+        }
+        loadProfileData();
+    </script>
+</body>
+</html>
