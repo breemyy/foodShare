@@ -358,3 +358,39 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
     transform: translateX(-3px);
     box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
 }
+
+.chat-list-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 10px;
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: transform 0.1s;
+}
+
+.chat-item:hover { transform: scale(1.01); }
+
+.chat-info {
+    margin-left: 15px;
+    flex-grow: 1;
+}
+
+.chat-info h4 { margin: 0; color: #333; }
+.chat-info p { margin: 4px 0 0; font-size: 0.9rem; color: #666; }
+
+.unread-badge {
+    background: #e74c3c;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+}
