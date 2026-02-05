@@ -12,37 +12,24 @@ let base64Image = "";
 async function checkUserSession() {
     const authOverlay = document.getElementById('authOverlay');
     
-    try {
-        // 1. Session mit Timeout-Schutz abfragen
-        const { data: { session }, error } = await supabaseClient.auth.getSession();
+    // 1. Session abfragen
+    const { data, error } = await supabaseClient.auth.getSession();
 
-        if (error) throw error;
-
-        if (session) {
-            console.log("Session gefunden");
-            if (authOverlay) authOverlay.style.display = 'none';
-            
-            // WICHTIG: Erst laden, wenn eingeloggt
-            if (typeof loadPosts === "function") loadPosts();
-            if (typeof loadHeaderProfilePicture === "function") loadHeaderProfilePicture();
-        } else {
-            console.log("Keine Session, zeige Login");
-            if (authOverlay) authOverlay.style.display = 'flex';
-        }
-
-    } catch (err) {
-        console.error("Session-Check fehlgeschlagen:", err);
-        // Im Fehlerfall zeigen wir das Login zur Sicherheit an
+    if (error || !data.session) {
+        console.log("Kein User - Login wird eingeblendet");
         if (authOverlay) authOverlay.style.display = 'flex';
-    } finally {
-        // EGAL WAS PASSIERT: Der weiße Bildschirm verschwindet jetzt
-        document.body.classList.add('loaded');
+    } else {
+        console.log("User eingeloggt - lade Inhalte");
+        if (authOverlay) authOverlay.style.display = 'none';
+        
+        // Funktionen nur ausführen, wenn sie existieren
+        if (typeof loadPosts === "function") loadPosts();
+        if (typeof loadHeaderProfilePicture === "function") loadHeaderProfilePicture();
     }
 }
 
-// Sofortiger Aufruf
+// Ausführen
 checkUserSession();
-
 dropzone.addEventListener('click', () => fileInput.click());
 
 fileInput.addEventListener('change', (e) => {
