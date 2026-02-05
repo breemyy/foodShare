@@ -187,19 +187,15 @@ async function uploadPhoto(event) {
     if (!file) return;
 
     const { data: { user } } = await supabaseClient.auth.getUser();
-    const filePath = `${user.id}-${Math.random()}.png`; // Random String verhindert Browser-Caching Probleme
-
-    // 1. Upload in Bucket 'avatars'
+    const filePath = `${user.id}-${Math.random()}.png`; 
     const { error: uploadError } = await supabaseClient.storage
         .from('avatars')
         .upload(filePath, file, { upsert: true });
 
     if (uploadError) return alert("Fehler: " + uploadError.message);
 
-    // 2. Link generieren
     const { data: { publicUrl } } = supabaseClient.storage.from('avatars').getPublicUrl(filePath);
 
-    // 3. In Datenbank speichern
     await supabaseClient.from('profiles').update({ avatar_url: publicUrl }).eq('id', user.id);
     
     document.getElementById('profileDisplay').src = publicUrl;
@@ -210,3 +206,26 @@ async function handleSignOut() {
     await supabaseClient.auth.signOut();
     window.location.href = 'index.html';
 }
+
+async function loadHeaderProfilePicture() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+
+    if (user) {
+        const { data: profile, error } = await supabaseClient
+            .from('profiles')
+            .select('avatar_url')
+            .eq('id', user.id)
+            .single();
+
+       
+        if (profile && profile.avatar_url) {
+            const headerPfp = document.getElementById('userPfp');
+            if (headerPfp) {
+                headerPfp.src = profile.avatar_url;
+            }
+        }
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', loadHeaderProfilePicture);
