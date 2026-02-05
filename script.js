@@ -272,6 +272,8 @@ async function openChat(receiverId, postTitle) {
     
     document.getElementById('chatTitle').innerText = "Anfrage: " + postTitle;
     document.getElementById('chatOverlay').style.display = 'flex';
+
+    await markAsRead(receiverId, postTitle);
     
     loadMessages();
 }
@@ -303,8 +305,9 @@ async function sendMessage() {
 
 async function loadMessages() {
     const { data: { user } } = await supabaseClient.auth.getUser();
-    
-    // Holt alle Nachrichten zwischen diesen zwei Personen für dieses Essen
+    if (!user || !currentReceiverId) return;
+
+    // Holt alle Nachrichten zwischen mir und dem Partner, die diesen Post betreffen
     const { data, error } = await supabaseClient
         .from('messages')
         .select('*')
@@ -312,23 +315,35 @@ async function loadMessages() {
         .eq('post_title', currentPostTitle)
         .order('created_at', { ascending: true });
 
+    if (error) return console.error("Fehler beim Laden:", error);
+
     const chatBox = document.getElementById('chatMessages');
     chatBox.innerHTML = "";
 
-    data?.forEach(msg => {
-        const msgDiv = document.createElement('div');
+    data.forEach(msg => {
         const isMe = msg.sender_id === user.id;
+        const msgDiv = document.createElement('div');
         
         msgDiv.style.alignSelf = isMe ? 'flex-end' : 'flex-start';
-        msgDiv.style.background = isMe ? '#2ecc71' : '#eee';
-        msgDiv.style.color = isMe ? 'white' : 'black';
-        msgDiv.style.padding = '8px 12px';
-        msgDiv.style.borderRadius = '12px';
-        msgDiv.style.maxWidth = '80%';
-        msgDiv.innerText = msg.content;
+        msgDiv.style.background = isMe ? '#2ecc71' : '#ffffff';
+        msgDiv.style.color = isMe ? 'white' : '#333';
+        msgDiv.style.padding = '10px 15px';
+        msgDiv.style.borderRadius = '15px';
+        msgDiv.style.border = isMe ? 'none' : '1px solid #eee';
+        msgDiv.style.maxWidth = '75%';
+        msgDiv.style.boxShadow = '0 2px 5px rgba(0,0,0,0.05)';
+        
+        // Nachrichtentext + Uhrzeit klein drunter
+        const time = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        msgDiv.innerHTML = `
+            <div style="font-size: 1rem;">${msg.content}</div>
+            <div style="font-size: 0.7rem; text-align: right; margin-top: 4px; opacity: 0.8;">${time}</div>
+        `;
         
         chatBox.appendChild(msgDiv);
     });
+
+    // Immer nach ganz unten scrollen
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
