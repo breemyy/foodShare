@@ -1,6 +1,6 @@
 const SUPABASE_URL = 'https://kdsshxteunozizxotibn.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_HJmiLsA5ijBt3_Io_9sJ7A_BdbjDC8a';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const uploadForm = document.getElementById('uploadForm');
 const foodFeed = document.getElementById('foodFeed');
@@ -27,7 +27,7 @@ fileInput.addEventListener('change', (e) => {
 async function loadFeed() {
     foodFeed.innerHTML = '<p>Lade leckeres Essen...</p>';
     
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
         .from('posts')
         .select('*')
         .order('created_at', { ascending: false });
@@ -68,7 +68,7 @@ uploadForm.addEventListener('submit', async (e) => {
     const remarks = document.getElementById('remarksInput').value;
     const expiry = document.getElementById('expiryInput').value;
 
-    const { error } = await supabase
+    const { error } = await supabaseClient
         .from('posts')
         .insert([{ 
             title: title, 
