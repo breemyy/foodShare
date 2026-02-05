@@ -9,6 +9,25 @@ const dropzone = document.getElementById('dropzone');
 
 let base64Image = "";
 
+document.addEventListener('DOMContentLoaded', loadHeaderProfilePicture);
+
+async function checkUserSession() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+
+    if (session) {
+        const authOverlay = document.getElementById('authOverlay');
+        if (authOverlay) {
+            authOverlay.style.display = 'none'; 
+        }
+        loadPosts(); 
+        loadHeaderProfilePicture(); 
+    } else {
+        document.getElementById('authOverlay').style.display = 'flex';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', checkUserSession);
+
 dropzone.addEventListener('click', () => fileInput.click());
 
 fileInput.addEventListener('change', (e) => {
@@ -226,23 +245,3 @@ async function loadHeaderProfilePicture() {
         }
     }
 }
-
-
-document.addEventListener('DOMContentLoaded', loadHeaderProfilePicture);
-
-async function checkUserSession() {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-
-    if (session) {
-        const authOverlay = document.getElementById('authOverlay');
-        if (authOverlay) {
-            authOverlay.style.display = 'none'; 
-        }
-        loadPosts(); 
-        loadHeaderProfilePicture(); 
-    } else {
-        document.getElementById('authOverlay').style.display = 'flex';
-    }
-}
-
-document.addEventListener('DOMContentLoaded', checkUserSession);
