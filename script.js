@@ -347,8 +347,12 @@ async function loadChatOverview() {
     chatList.innerHTML = "";
 
     if (messages.length === 0) {
-        chatList.innerHTML = "<p style='text-align:center;'>Noch keine Nachrichten vorhanden.</p>";
-        return;
+    chatList.innerHTML = `
+        <div style="text-align:center; margin-top: 50px; color: #ccc;">
+            <span style="font-size: 50px;">✉️</span>
+            <p>Noch keine Nachrichten.<br>Frag doch mal jemanden an!</p>
+        </div>`;
+    return;
     }
 
     // Chats gruppieren (nach Gesprächspartner + Post)
@@ -367,11 +371,16 @@ async function loadChatOverview() {
         }
     });
 
-    // Für jeden Chat eine Zeile generieren
     for (const key in chats) {
         const chat = chats[key];
         
-        // Optional: Namen des Partners aus Profilen laden
+        // Zeit formatieren (Heute nur Uhrzeit, sonst Datum)
+        const msgDate = new Date(chat.timestamp);
+        const isToday = msgDate.toDateString() === new Date().toDateString();
+        const timeString = isToday 
+            ? msgDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            : msgDate.toLocaleDateString([], { day: '2-digit', month: '2-digit' });
+
         const { data: profile } = await supabaseClient
             .from('profiles')
             .select('username, avatar_url')
@@ -385,7 +394,10 @@ async function loadChatOverview() {
         item.innerHTML = `
             <img src="${profile?.avatar_url || 'https://via.placeholder.com/40'}" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
             <div class="chat-info">
-                <h4>${profile?.username || 'Anonym'}</h4>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h4>${profile?.username || 'Anonym'}</h4>
+                    <span class="chat-time">${timeString}</span>
+                </div>
                 <p><strong>${chat.postTitle}:</strong> ${chat.lastMessage.substring(0, 30)}...</p>
             </div>
             ${chat.unread ? '<span class="unread-badge">Neu</span>' : ''}
@@ -393,6 +405,7 @@ async function loadChatOverview() {
         chatList.appendChild(item);
     }
 }
+
 
 async function checkUnreadMessages() {
     const { data: { user } } = await supabaseClient.auth.getUser();
