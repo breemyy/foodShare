@@ -388,11 +388,11 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
 .chat-info p { margin: 4px 0 0; font-size: 0.9rem; color: #666; }
 
 .unread-badge {
-    background: #e74c3c;
-    color: white;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-size: 0.75rem;
+    width: 10px;
+    height: 10px;
+    background-color: #2ecc71; /* Dein Grün */
+    border-radius: 50%;
+    flex-shrink: 0;
 }
 
 .floating-chat-btn {
