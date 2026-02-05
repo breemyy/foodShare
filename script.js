@@ -93,7 +93,7 @@ uploadForm.addEventListener('submit', async (e) => {
 loadFeed();
 
 
-// Prüfen, ob schon jemand eingeloggt ist
+
 window.onload = async () => {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (user) {
@@ -111,7 +111,7 @@ async function handleSignUp() {
 
     if (error) return alert("Fehler: " + error.message);
     
-    // Profil in der neuen Tabelle erstellen
+    
     if (data.user) {
         await supabaseClient.from('profiles').insert([{ id: data.user.id, username: username }]);
         alert("Account erstellt! Du kannst dich jetzt einloggen.");
