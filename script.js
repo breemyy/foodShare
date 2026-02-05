@@ -1,6 +1,11 @@
 const SUPABASE_URL = 'https://kdsshxteunozizxotibn.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_HJmiLsA5ijBt3_Io_9sJ7A_BdbjDC8a';
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true
+  }
+});
 
 const uploadForm = document.getElementById('uploadForm');
 const foodFeed = document.getElementById('foodFeed');
