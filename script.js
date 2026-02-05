@@ -7,6 +7,9 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
   }
 });
 
+let currentReceiverId = null;
+let currentPostTitle = "";
+
 const uploadForm = document.getElementById('uploadForm');
 const foodFeed = document.getElementById('foodFeed');
 const fileInput = document.getElementById('fileInput');
