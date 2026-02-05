@@ -110,49 +110,43 @@ window.onload = async () => {
 };
 
 async function handleSignUp() {
-    const email = document.getElementById('emailInput').value;
+    const email = document.getElementById('emailInput').value.trim();
     const password = document.getElementById('passwordInput').value;
-    const username = document.getElementById('usernameInput').value;
+    const username = document.getElementById('usernameInput').value.trim();
 
-   
+    if (!email || !password || !username) {
+        alert("Bitte alle Felder ausfüllen!");
+        return;
+    }
+
+    // Wir übergeben den Username in den 'options', damit der SQL-Trigger darauf zugreifen kann
     const { data, error } = await supabaseClient.auth.signUp({
         email: email,
-        password: password
+        password: password,
+        options: {
+            data: {
+                username: username
+            }
+        }
     });
 
     if (error) {
         alert("Registrierungs-Fehler: " + error.message);
-        return;
-    }
-
-    if (data.user) {
-        const { error: profileError } = await supabaseClient
-            .from('profiles')
-            .insert([
-                { 
-                    id: data.user.id, 
-                    username: username 
-                }
-            ]);
-
-        if (profileError) {
-            console.error("Profil konnte nicht gespeichert werden:", profileError);
-            alert("Fehler beim Profil-Speichern: " + profileError.message);
-        } else {
-            alert("Registrierung und Profil erfolgreich!");
-        }
+    } else {
+        alert("Check deine E-Mails! Sobald du bestätigt hast, ist dein Profil bereit.");
     }
 }
 
 async function handleSignIn() {
-    const email = document.getElementById('emailInput').value;
+    const email = document.getElementById('emailInput').value.trim();
     const password = document.getElementById('passwordInput').value;
 
     const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
-    if (error) alert("Login fehlgeschlagen: " + error.message);
-    else {
+    if (error) {
+        alert("Login fehlgeschlagen: " + error.message);
+    } else {
         document.getElementById('authOverlay').style.display = 'none';
-        loadPosts();
+        if (typeof loadPosts === "function") loadPosts();
     }
-};
+}
