@@ -435,7 +435,7 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
 }
 
 .back-btn {
-    background: none;
+    background: #2ecc71;
     border: none;
     cursor: pointer;
     display: flex;
@@ -448,11 +448,11 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
 }
 
 .back-btn:hover {
-    background-color: #f0f0f0;
+    background-color: #27ae60;
 }
 
 .back-icon {
     font-size: 24px;
-    color: #2ecc71; /* Passend zu deinem Grün */
+    color: white; 
     font-weight: bold;
 }
