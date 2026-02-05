@@ -2,38 +2,78 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mein Profil - FoodShare</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <button onclick="window.location.href='index.html'">⬅ Zurück</button>
-        <h1>Mein Profil</h1>
-        <div class="profile-edit">
-            <p id="displayUsername">Lade...</p>
-            <button onclick="handleSignOut()">Abmelden</button>
+
+<div class="profile-container">
+    <button class="back-btn" onclick="window.location.href='index.html'">← Zurück</button>
+    
+    <div class="profile-card">
+        <div class="avatar-section">
+            <div class="avatar-wrapper" onclick="document.getElementById('pfpInput').click()">
+                <img id="profileDisplay" src="https://via.placeholder.com/150" alt="Profilbild">
+                <div class="overlay"><span>Ändern</span></div>
+            </div>
+            <input type="file" id="pfpInput" hidden accept="image/*" onchange="uploadPhoto(event)">
         </div>
+
+        <h1 id="usernameDisplay">Lade...</h1>
+        <p class="user-email" id="emailDisplay">E-Mail wird geladen...</p>
+
+        <div class="stats-row">
+            <div class="stat">
+                <strong id="countSpenden">0</strong>
+                <span>Spenden</span>
+            </div>
+            <div class="stat">
+                <strong id="countRequests">0</strong>
+                <span>Anfragen</span>
+            </div>
+        </div>
+
+        <button class="logout-btn" onclick="handleSignOut()">Abmelden</button>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js"></script>
-    <script>
-        // Kleines Script nur für diese Seite, um Daten anzuzeigen
-        async function loadProfileData() {
-            const { data: { user } } = await supabaseClient.auth.getUser();
-            if (!user) window.location.href = 'index.html';
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+<script>
+    async function initProfile() {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) {
+            window.location.href = 'index.html';
+            return;
+        }
 
-            const { data } = await supabaseClient
-                .from('profiles')
-                .select('*')
-                .eq('id', user.id)
-                .single();
-            
-            if (data) {
-                document.getElementById('displayUsername').innerText = "Nutzername: " + data.username;
+        const { data: profile } = await supabaseClient
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+        
+        if (profile) {
+            document.getElementById('usernameDisplay').innerText = profile.username;
+            document.getElementById('emailDisplay').innerText = user.email;
+            if (profile.avatar_url) {
+                document.getElementById('profileDisplay').src = profile.avatar_url;
             }
         }
-        loadProfileData();
-    </script>
+
+        
+        const { count: postCount } = await supabaseClient
+            .from('posts')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id);
+        
+        document.getElementById('countSpenden').innerText = postCount || 0;
+
+       
+    }
+
+    initProfile();
+</script>
 </body>
 </html>
