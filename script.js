@@ -91,3 +91,42 @@ uploadForm.addEventListener('submit', async (e) => {
 });
 
 loadFeed();
+
+
+// Prüfen, ob schon jemand eingeloggt ist
+window.onload = async () => {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (user) {
+        document.getElementById('authOverlay').style.display = 'none';
+        loadPosts();
+    }
+};
+
+async function handleSignUp() {
+    const email = document.getElementById('emailInput').value;
+    const password = document.getElementById('passwordInput').value;
+    const username = document.getElementById('usernameInput').value;
+
+    const { data, error } = await supabaseClient.auth.signUp({ email, password });
+
+    if (error) return alert("Fehler: " + error.message);
+    
+    // Profil in der neuen Tabelle erstellen
+    if (data.user) {
+        await supabaseClient.from('profiles').insert([{ id: data.user.id, username: username }]);
+        alert("Account erstellt! Du kannst dich jetzt einloggen.");
+    }
+}
+
+async function handleSignIn() {
+    const email = document.getElementById('emailInput').value;
+    const password = document.getElementById('passwordInput').value;
+
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+    if (error) alert("Login fehlgeschlagen: " + error.message);
+    else {
+        document.getElementById('authOverlay').style.display = 'none';
+        loadPosts();
+    }
+}
