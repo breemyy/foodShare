@@ -276,11 +276,10 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
 }
 
 .profile-circle {
-    width: 45px;
-    height: 45px;
+    width: 45px !important;
+    height: 45px !important;
+    overflow: hidden !important; /* DAS HIER STOPPT DAS RIESIGE BILD */
     border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid #2ecc71;
     cursor: pointer;
     background: #eee;
     transition: transform 0.2s;
