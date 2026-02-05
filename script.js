@@ -96,7 +96,6 @@ uploadForm.addEventListener('submit', async (e) => {
         document.getElementById('dropzone-text').style.display = 'block';
         loadPosts();
     }
-});
 
 loadPosts();
 
