@@ -37,24 +37,31 @@ async function loadPosts() {
     
     foodFeed.innerHTML = '';
 
-   data.forEach(post => {
+  data.forEach(post => {
     const card = document.createElement('div');
     card.className = 'food-card';
-    const expiryDate = post.expiry ? new Date(post.expiry).toLocaleDateString('de-DE') : 'Keine Angabe';
+    const expiryDate = post.expiry ? new Date(post.expiry).toLocaleDateString('de-DE') : 'k.A.';
 
     card.innerHTML = `
-        <img src="${post.image}" class="food-img">
-        <div class="card-body">
-            <span class="category-badge">${post.category || 'Allgemein'}</span>
-            <h3>${post.title}</h3>
-            <p class="remarks">${post.remarks || ''}</p>
-            <div class="info-row">
-                <span>⌛ Haltbar bis: ${expiryDate}</span>
-                <span>👤 Von: <strong>${post.profiles?.username || 'Anonym'}</strong></span>
+        <div class="card-image-container">
+            <img src="${post.image}" class="food-img">
+            <span class="category-badge">${post.category || 'Food'}</span>
+        </div>
+        <div class="card-content">
+            <div class="card-header">
+                <h3>${post.title}</h3>
+                <p class="remarks">${post.remarks || ''}</p>
             </div>
-            <button class="request-btn" onclick="openChat('${post.user_id}', '${post.title}')">
-                Anfragen
-            </button>
+            
+            <div class="card-footer">
+                <div class="user-info">
+                    <span>⏳ ${expiryDate}</span>
+                    <span>👤 ${post.profiles?.username || 'Anonym'}</span>
+                </div>
+                <button class="request-btn" onclick="openChat('${post.user_id}', '${post.title}')">
+                    Anfragen
+                </button>
+            </div>
         </div>
     `;
     foodFeed.appendChild(card);
