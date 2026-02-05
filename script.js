@@ -209,17 +209,21 @@ async function handleSignOut() {
 
 async function loadHeaderProfilePicture() {
     const { data: { user } } = await supabaseClient.auth.getUser();
-    if (!user) return;
 
-    const { data: profile } = await supabaseClient
-        .from('profiles')
-        .select('avatar_url')
-        .eq('id', user.id)
-        .single();
+    if (user) {
+        const { data: profile, error } = await supabaseClient
+            .from('profiles')
+            .select('avatar_url')
+            .eq('id', user.id)
+            .single();
 
-    if (profile?.avatar_url) {
-        const headerPfp = document.getElementById('userPfp');
-        if (headerPfp) headerPfp.src = profile.avatar_url;
+       
+        if (profile && profile.avatar_url) {
+            const headerPfp = document.getElementById('userPfp');
+            if (headerPfp) {
+                headerPfp.src = profile.avatar_url;
+            }
+        }
     }
 }
 
