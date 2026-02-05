@@ -119,7 +119,6 @@ async function handleSignUp() {
         return;
     }
 
-    // Wir übergeben den Username in den 'options', damit der SQL-Trigger darauf zugreifen kann
     const { data, error } = await supabaseClient.auth.signUp({
         email: email,
         password: password,
@@ -133,10 +132,10 @@ async function handleSignUp() {
     if (error) {
         alert("Registrierungs-Fehler: " + error.message);
     } else {
-        alert("Check deine E-Mails! Sobald du bestätigt hast, ist dein Profil bereit.");
+        alert("Registrierung erfolgreich! Bitte bestätige deine E-Mail.");
     }
 }
-
+    
 async function handleSignIn() {
     const email = document.getElementById('emailInput').value.trim();
     const password = document.getElementById('passwordInput').value;
@@ -147,6 +146,9 @@ async function handleSignIn() {
         alert("Login fehlgeschlagen: " + error.message);
     } else {
         document.getElementById('authOverlay').style.display = 'none';
-        if (typeof loadPosts === "function") loadPosts();
+
+        if (typeof loadPosts === "function") {
+            loadPosts();
+        }
     }
-}
+} 
