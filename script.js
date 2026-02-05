@@ -366,7 +366,8 @@ async function loadChatOverview() {
                 partnerId: partnerId,
                 lastMessage: m.content,
                 postTitle: m.post_title,
-                unread: (m.receiver_id === user.id && !m.is_read)
+                unread: (m.receiver_id === user.id && !m.is_read),
+                timestamp: m.created_at
             };
         }
     });
