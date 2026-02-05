@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meine Chats - FoodShare</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="loaded">
+    <header class="main-header">
+        <div class="header-left"><button onclick="window.location.href='index.html'">←</button></div>
+        <div class="logo-area"><h1>Meine Chats 💬</h1></div>
+        <div class="header-actions"></div>
+    </header>
+
+    <main class="chat-list-container">
+        <div id="chatList">
+            <p style="text-align:center; padding:20px;">Lade Nachrichten...</p>
+        </div>
+    </main>
+
+    <div id="chatOverlay" class="auth-overlay" style="display: none;">
+        </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+    <script>
+        // Startet die Chat-Übersicht beim Laden
+        document.addEventListener('DOMContentLoaded', loadChatOverview);
+    </script>
+</body>
+</html>
