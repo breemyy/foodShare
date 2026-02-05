@@ -81,8 +81,8 @@ uploadForm.addEventListener('submit', async (e) => {
             category: category, 
             remarks: remarks, 
             image: base64Image,
-            expiry: expiryValue === "" ? null : expiryValue
-            user_id: user.id,
+            expiry: expiryValue === "" ? null : expiryValue,
+            user_id: user.id
         }]);
 
     if (error) {
