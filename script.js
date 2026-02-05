@@ -9,23 +9,24 @@ const dropzone = document.getElementById('dropzone');
 
 let base64Image = "";
 
-async function initApp() {
+async function checkUserSession() {
+    const authOverlay = document.getElementById('authOverlay');
+    
+    // 1. Session abfragen
     const { data: { session } } = await supabaseClient.auth.getSession();
 
+    // 2. Entscheidung treffen
     if (session) {
-        console.log("Session aktiv.");
-        if (authOverlay) authOverlay.style.display = 'none';
-        
-        // Daten erst laden, wenn wir sicher eingeloggt sind
+        authOverlay.style.display = 'none';
         loadPosts();
         loadHeaderProfilePicture();
     } else {
-        console.log("Keine Session.");
-        if (authOverlay) authOverlay.style.display = 'flex';
+        authOverlay.style.display = 'flex';
     }
-}
 
-document.addEventListener('DOMContentLoaded', initApp);
+    // 3. Den "Vorhang" öffnen (WICHTIG!)
+    document.body.classList.add('loaded');
+}
 
 dropzone.addEventListener('click', () => fileInput.click());
 
