@@ -9,7 +9,7 @@ const dropzone = document.getElementById('dropzone');
 
 let base64Image = "";
 
-
+// --- Event Listener für Datei-Upload ---
 dropzone.addEventListener('click', () => fileInput.click());
 
 fileInput.addEventListener('change', (e) => {
@@ -23,7 +23,7 @@ fileInput.addEventListener('change', (e) => {
     if (file) reader.readAsDataURL(file);
 });
 
-
+// --- Posts laden ---
 async function loadPosts() {
     const { data, error } = await supabaseClient
         .from('posts')
@@ -32,10 +32,12 @@ async function loadPosts() {
             profiles ( username )
         `);
 
-    if (error) console.error(error);
+    if (error) {
+        console.error(error);
+        return;
+    }
     
-    const feed = document.getElementById('foodFeed');
-    feed.innerHTML = '';
+    foodFeed.innerHTML = '';
 
     data.forEach(post => {
         const card = document.createElement('div');
@@ -46,13 +48,14 @@ async function loadPosts() {
             <p>Von: <strong>${post.profiles?.username || 'Anonym'}</strong></p>
             <button onclick="openChat('${post.user_id}', '${post.title}')">Anfragen</button>
         `;
-        feed.appendChild(card);
+        foodFeed.appendChild(card);
     });
 }
 
+// --- Upload Logik ---
+// WICHTIG: Die Funktion handleUpload wird jetzt vom Listener aufgerufen
 async function handleUpload(e) {
     e.preventDefault();
-    
     
     const { data: { user } } = await supabaseClient.auth.getUser();
     
@@ -61,19 +64,14 @@ async function handleUpload(e) {
         return;
     }
 
-uploadForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
     if (!base64Image) {
         alert("Bitte erst ein Foto hochladen!");
         return;
     }
-});
 
     const title = document.getElementById('titleInput').value;
     const category = document.getElementById('categorySelect').value;
     const remarks = document.getElementById('remarksInput').value;
-    const expiry = document.getElementById('expiryInput').value;
     const expiryValue = document.getElementById('expiryInput').value;
 
     const { error } = await supabaseClient
@@ -92,15 +90,17 @@ uploadForm.addEventListener('submit', async (e) => {
     } else {
         alert("Erfolgreich geteilt!");
         uploadForm.reset();
+        base64Image = ""; // Reset Bild-Variable
         document.getElementById('previewContainer').innerHTML = '';
         document.getElementById('dropzone-text').style.display = 'block';
         loadPosts();
     }
+}
 
-loadPosts();
+// Event Listener für das Formular (sauber getrennt)
+uploadForm.addEventListener('submit', handleUpload);
 
-
-
+// --- Auth Funktionen ---
 window.onload = async () => {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (user) {
@@ -123,9 +123,7 @@ async function handleSignUp() {
         email: email,
         password: password,
         options: {
-            data: {
-                username: username
-            }
+            data: { username: username }
         }
     });
 
@@ -146,9 +144,6 @@ async function handleSignIn() {
         alert("Login fehlgeschlagen: " + error.message);
     } else {
         document.getElementById('authOverlay').style.display = 'none';
-
-        if (typeof loadPosts === "function") {
-            loadPosts();
-        }
+        loadPosts();
     }
-} 
+}
