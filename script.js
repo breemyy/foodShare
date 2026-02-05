@@ -46,10 +46,11 @@ async function loadHeaderProfilePicture() {
     const headerPfp = document.getElementById('userPfp');
     if (headerPfp && profile?.avatar_url) {
         headerPfp.src = profile.avatar_url;
-        // WICHTIG: Hier im JS sicherstellen, dass das Bild klein bleibt
-        headerPfp.style.width = '100%';
-        headerPfp.style.height = '100%';
-        headerPfp.style.objectFit = 'cover';
+        
+        headerPfp.style.width = "45px";
+        headerPfp.style.height = "45px";
+        headerPfp.style.borderRadius = "50%";
+        headerPfp.style.objectFit = "cover";
     }
 }
 
