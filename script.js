@@ -162,3 +162,22 @@ async function handleSignIn() {
         loadPosts();
     }
 }
+
+async function updateProfileCircle() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (user) {
+        const { data: profile } = await supabaseClient
+            .from('profiles')
+            .select('avatar_url')
+            .eq('id', user.id)
+            .single();
+
+        if (profile?.avatar_url) {
+            document.getElementById('userPfp').src = profile.avatar_url;
+        }
+    }
+}
+
+function goToProfile() {
+    window.location.href = 'profile.html';
+}
