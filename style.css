@@ -6,11 +6,18 @@
 }
 
 body {
+    opacity: 0;
+    transition: opacity 0.2s ease-in;
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background-color: var(--bg-light);
     color: var(--text-dark);
     margin: 0;
     padding: 0;
+}
+
+
+body.loaded {
+    opacity: 1;
 }
 
 header {
