@@ -276,7 +276,11 @@ async function openChat(receiverId, postTitle) {
     document.getElementById('chatTitle').innerText = "Anfrage: " + postTitle;
     document.getElementById('chatOverlay').style.display = 'flex';
 
-    await markAsRead(receiverId, postTitle);
+    try {
+        await markAsRead(receiverId, postTitle);
+    } catch (e) {
+        console.warn("Konnte Nachrichten nicht als gelesen markieren.");
+    }
     
     loadMessages();
 }
@@ -428,6 +432,24 @@ async function loadChatOverview() {
     }
 }
 
+async function markAsRead(senderId, postTitle) {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return;
+
+        await supabaseClient
+            .from('messages')
+            .update({ is_read: true })
+            .eq('receiver_id', user.id)
+            .eq('sender_id', senderId)
+            .eq('post_title', postTitle);
+        
+        // Aktualisiert den roten Punkt
+        if (typeof checkUnreadMessages === "function") checkUnreadMessages();
+    } catch (err) {
+        console.error("Fehler beim Markieren als gelesen:", err);
+    }
+}
 
 async function checkUnreadMessages() {
     const { data: { user } } = await supabaseClient.auth.getUser();
