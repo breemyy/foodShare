@@ -13,7 +13,22 @@
     <h1>FoodShare 🍎</h1>
     <p>Essen retten – lokal & kostenlos</p>
 </header>
-
+    
+<div id="authOverlay" class="auth-overlay">
+    <div class="auth-box">
+        <h2>Willkommen bei FoodShare 🍎</h2>
+        <div id="authFields">
+            <input type="email" id="emailInput" placeholder="E-Mail" required>
+            <input type="password" id="passwordInput" placeholder="Passwort" required>
+            <input type="text" id="usernameInput" placeholder="Dein Name (für andere sichtbar)">
+            <div class="auth-buttons">
+                <button onclick="handleSignUp()" class="btn-secondary">Registrieren</button>
+                <button onclick="handleSignIn()" class="btn-primary">Einloggen</button>
+            </div>
+        </div>
+    </div>
+</div>
+    
 <div class="container">
     <div class="search-container">
         <input type="text" id="searchBar" placeholder="Suchen nach Obst, Brot, Milch...">
