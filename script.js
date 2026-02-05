@@ -24,35 +24,32 @@ fileInput.addEventListener('change', (e) => {
 });
 
 
-async function loadFeed() {
-    foodFeed.innerHTML = '<p>Lade leckeres Essen...</p>';
-    
+async function loadPosts() {
     const { data, error } = await supabaseClient
         .from('posts')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .select(`
+            *,
+            profiles ( username )
+        `);
 
-    if (error) {
-        console.error(error);
-        return;
-    }
+    if (error) console.error(error);
+    
+    const feed = document.getElementById('foodFeed');
+    feed.innerHTML = '';
 
-    foodFeed.innerHTML = '';
-    data.forEach(item => {
+    data.forEach(post => {
         const card = document.createElement('div');
         card.className = 'food-card';
         card.innerHTML = `
-            <img src="${item.image}" alt="Essen">
-            <div class="food-info">
-                <h3>${item.title}</h3>
-                <p><strong>Kategorie:</strong> ${item.category}</p>
-                <p>${item.remarks || ''}</p>
-                <p><small>Haltbar bis: ${item.expiry || 'k.A.'}</small></p>
-            </div>
+            <img src="${post.image}">
+            <h3>${post.title}</h3>
+            <p>Von: <strong>${post.profiles?.username || 'Anonym'}</strong></p>
+            <button onclick="openChat('${post.user_id}', '${post.title}')">Anfragen</button>
         `;
-        foodFeed.appendChild(card);
+        feed.appendChild(card);
     });
 }
+
 async function handleUpload(e) {
     e.preventDefault();
     
@@ -95,11 +92,11 @@ uploadForm.addEventListener('submit', async (e) => {
         uploadForm.reset();
         document.getElementById('previewContainer').innerHTML = '';
         document.getElementById('dropzone-text').style.display = 'block';
-        loadFeed();
+        loadPosts();
     }
 });
 
-loadFeed();
+loadPosts();
 
 
 
