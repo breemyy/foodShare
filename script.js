@@ -265,9 +265,6 @@ document.addEventListener('DOMContentLoaded', loadHeaderProfilePicture);
 
 //CHAT FUNKTION
 
-let currentReceiverId = "";
-let currentPostTitle = "";
-
 async function openChat(receiverId, postTitle) {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (!user) return alert("Logge dich ein, um zu chatten!");
