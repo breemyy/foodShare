@@ -7,6 +7,7 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
   }
 });
 
+
 let currentReceiverId = null;
 let currentPostTitle = "";
 
@@ -20,21 +21,23 @@ let base64Image = "";
 async function checkUserSession() {
     const authOverlay = document.getElementById('authOverlay');
     
-    // 1. Session abfragen
-    const { data, error } = await supabaseClient.auth.getSession();
+    // Wir holen uns die Session
+    const { data: { session }, error } = await supabaseClient.auth.getSession();
 
-    if (error || !data.session) {
-        console.log("Kein User - Login wird eingeblendet");
+    if (error || !session) {
+        console.log("Kein User - zeige Login");
         if (authOverlay) authOverlay.style.display = 'flex';
     } else {
-        console.log("User eingeloggt - lade Inhalte");
+        console.log("User eingeloggt");
         if (authOverlay) authOverlay.style.display = 'none';
         
-        // Funktionen nur ausführen, wenn sie existieren
+        // Erst jetzt laden wir die Daten
         if (typeof loadPosts === "function") loadPosts();
         if (typeof loadHeaderProfilePicture === "function") loadHeaderProfilePicture();
+        if (typeof checkUnreadMessages === "function") checkUnreadMessages();
     }
 }
+
 
 // Ausführen
 checkUserSession();
