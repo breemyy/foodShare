@@ -12,21 +12,36 @@ let base64Image = "";
 async function checkUserSession() {
     const authOverlay = document.getElementById('authOverlay');
     
-    // 1. Session abfragen
-    const { data: { session } } = await supabaseClient.auth.getSession();
+    try {
+        // 1. Session mit Timeout-Schutz abfragen
+        const { data: { session }, error } = await supabaseClient.auth.getSession();
 
-    // 2. Entscheidung treffen
-    if (session) {
-        authOverlay.style.display = 'none';
-        loadPosts();
-        loadHeaderProfilePicture();
-    } else {
-        authOverlay.style.display = 'flex';
+        if (error) throw error;
+
+        if (session) {
+            console.log("Session gefunden");
+            if (authOverlay) authOverlay.style.display = 'none';
+            
+            // WICHTIG: Erst laden, wenn eingeloggt
+            if (typeof loadPosts === "function") loadPosts();
+            if (typeof loadHeaderProfilePicture === "function") loadHeaderProfilePicture();
+        } else {
+            console.log("Keine Session, zeige Login");
+            if (authOverlay) authOverlay.style.display = 'flex';
+        }
+
+    } catch (err) {
+        console.error("Session-Check fehlgeschlagen:", err);
+        // Im Fehlerfall zeigen wir das Login zur Sicherheit an
+        if (authOverlay) authOverlay.style.display = 'flex';
+    } finally {
+        // EGAL WAS PASSIERT: Der weiße Bildschirm verschwindet jetzt
+        document.body.classList.add('loaded');
     }
-
-    // 3. Den "Vorhang" öffnen (WICHTIG!)
-    document.body.classList.add('loaded');
 }
+
+// Sofortiger Aufruf
+checkUserSession();
 
 dropzone.addEventListener('click', () => fileInput.click());
 
