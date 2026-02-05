@@ -23,6 +23,39 @@ header {
     z-index: 1000;
 }
 
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: white;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 70px; /* Feste Höhe für ein ruhiges Layout */
+}
+
+/* Alle drei Teile nehmen gleich viel Platz ein */
+.header-left, 
+.logo-area, 
+.header-actions {
+    flex: 1;
+    display: flex;
+}
+
+/* Logo exakt mittig ausrichten */
+.logo-area {
+    justify-content: center;
+    text-align: center;
+}
+
+.logo-area h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    white-space: nowrap; /* Verhindert Zeilenumbruch */
+}
+
 header h1 { margin: 0; color: var(--primary-green); font-size: 1.8rem; }
 header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
 
@@ -270,9 +303,9 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
     top: 20px;
     right: 20px;
     display: flex;
-    align-items: center;
     gap: 15px;
     z-index: 1000;
+    justify-content: flex-end;
 }
 
 .profile-circle {
