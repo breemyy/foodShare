@@ -11,21 +11,25 @@ let base64Image = "";
 
 
 async function checkUserSession() {
-    const { data: { session } } = await supabaseClient.auth.getSession();
+    const authOverlay = document.getElementById('authOverlay');
+    
+    const { data: { session }, error } = await supabaseClient.auth.getSession();
 
-    if (session) {
-        const authOverlay = document.getElementById('authOverlay');
-        if (authOverlay) {
-            authOverlay.style.display = 'none'; 
-        }
+    if (session && session.user) {
+        console.log("User eingeloggt:", session.user.email);
+        
+        if (authOverlay) authOverlay.style.display = 'none';
+        
         loadPosts(); 
-        loadHeaderProfilePicture(); 
+        loadHeaderProfilePicture();
     } else {
-        document.getElementById('authOverlay').style.display = 'flex';
+        console.log("Kein User gefunden, zeige Login.");
+        
+        if (authOverlay) authOverlay.style.display = 'flex';
     }
 }
 
-document.addEventListener('DOMContentLoaded', checkUserSession);
+checkUserSession();
 
 async function loadPosts() {
     const { data, error } = await supabaseClient
