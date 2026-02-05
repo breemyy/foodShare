@@ -9,7 +9,6 @@ const dropzone = document.getElementById('dropzone');
 
 let base64Image = "";
 
-document.addEventListener('DOMContentLoaded', loadHeaderProfilePicture);
 
 async function checkUserSession() {
     const { data: { session } } = await supabaseClient.auth.getSession();
@@ -27,19 +26,6 @@ async function checkUserSession() {
 }
 
 document.addEventListener('DOMContentLoaded', checkUserSession);
-
-dropzone.addEventListener('click', () => fileInput.click());
-
-fileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-        base64Image = reader.result;
-        document.getElementById('previewContainer').innerHTML = `<img src="${base64Image}" style="width:100%; border-radius:10px;">`;
-        document.getElementById('dropzone-text').style.display = 'none';
-    };
-    if (file) reader.readAsDataURL(file);
-});
 
 async function loadPosts() {
     const { data, error } = await supabaseClient
@@ -245,3 +231,5 @@ async function loadHeaderProfilePicture() {
         }
     }
 }
+
+document.addEventListener('DOMContentLoaded', loadHeaderProfilePicture);
