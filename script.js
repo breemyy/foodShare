@@ -187,38 +187,23 @@ async function uploadPhoto(event) {
     if (!file) return;
 
     const { data: { user } } = await supabaseClient.auth.getUser();
-    
-    // Dateiname erstellen (User-ID + Endung), damit Bilder überschrieben werden statt den Speicher zu füllen
-    const fileExt = file.name.split('.').pop();
-    const filePath = `avatars/${user.id}.${fileExt}`;
+    const filePath = `${user.id}-${Math.random()}.png`; // Random String verhindert Browser-Caching Probleme
 
-    // 1. Bild in den Supabase Storage Bucket 'avatars' hochladen
+    // 1. Upload in Bucket 'avatars'
     const { error: uploadError } = await supabaseClient.storage
         .from('avatars')
         .upload(filePath, file, { upsert: true });
 
-    if (uploadError) {
-        alert("Upload fehlgeschlagen: " + uploadError.message);
-        return;
-    }
+    if (uploadError) return alert("Fehler: " + uploadError.message);
 
-    // 2. Die öffentliche URL des Bildes abrufen
-    const { data: { publicUrl } } = supabaseClient.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
+    // 2. Link generieren
+    const { data: { publicUrl } } = supabaseClient.storage.from('avatars').getPublicUrl(filePath);
 
-    // 3. Den Link in der Datenbank-Tabelle 'profiles' speichern
-    const { error: updateError } = await supabaseClient
-        .from('profiles')
-        .update({ avatar_url: publicUrl })
-        .eq('id', user.id);
-
-    if (updateError) {
-        alert("Fehler beim Verknüpfen des Bildes: " + updateError.message);
-    } else {
-        document.getElementById('profileDisplay').src = publicUrl;
-        alert("Profilbild erfolgreich geändert!");
-    }
+    // 3. In Datenbank speichern
+    await supabaseClient.from('profiles').update({ avatar_url: publicUrl }).eq('id', user.id);
+    
+    document.getElementById('profileDisplay').src = publicUrl;
+    alert("Profilbild aktualisiert!");
 }
 
 async function handleSignOut() {
