@@ -9,7 +9,6 @@ const dropzone = document.getElementById('dropzone');
 
 let base64Image = "";
 
-// --- Event Listener für Datei-Upload ---
 dropzone.addEventListener('click', () => fileInput.click());
 
 fileInput.addEventListener('change', (e) => {
@@ -23,7 +22,6 @@ fileInput.addEventListener('change', (e) => {
     if (file) reader.readAsDataURL(file);
 });
 
-// --- Posts laden ---
 async function loadPosts() {
     const { data, error } = await supabaseClient
         .from('posts')
@@ -39,21 +37,36 @@ async function loadPosts() {
     
     foodFeed.innerHTML = '';
 
-    data.forEach(post => {
-        const card = document.createElement('div');
-        card.className = 'food-card';
-        card.innerHTML = `
-            <img src="${post.image}">
+   data.forEach(post => {
+    const card = document.createElement('div');
+    card.className = 'food-card';
+    
+   
+    const expiryDate = post.expiry ? new Date(post.expiry).toLocaleDateString('de-DE') : 'Keine Angabe';
+
+    card.innerHTML = `
+        <img src="${post.image}" alt="${post.title}">
+        <div class="card-content">
+            <span class="category-badge">${post.category || 'Allgemein'}</span>
             <h3>${post.title}</h3>
-            <p>Von: <strong>${post.profiles?.username || 'Anonym'}</strong></p>
-            <button onclick="openChat('${post.user_id}', '${post.title}')">Anfragen</button>
-        `;
-        foodFeed.appendChild(card);
-    });
+            
+            <p class="post-remarks">${post.remarks || 'Keine weiteren Infos.'}</p>
+            
+            <div class="post-info">
+                <span>⏳ Haltbar bis: ${expiryDate}</span>
+                <span>👤 Von: <strong>${post.profiles?.username || 'Anonym'}</strong></span>
+            </div>
+
+            <button class="request-btn" onclick="openChat('${post.user_id}', '${post.title}')">
+                Anfragen
+            </button>
+        </div>
+    `;
+    foodFeed.appendChild(card);
+});
 }
 
-// --- Upload Logik ---
-// WICHTIG: Die Funktion handleUpload wird jetzt vom Listener aufgerufen
+
 async function handleUpload(e) {
     e.preventDefault();
     
@@ -90,17 +103,17 @@ async function handleUpload(e) {
     } else {
         alert("Erfolgreich geteilt!");
         uploadForm.reset();
-        base64Image = ""; // Reset Bild-Variable
+        base64Image = ""; 
         document.getElementById('previewContainer').innerHTML = '';
         document.getElementById('dropzone-text').style.display = 'block';
         loadPosts();
     }
 }
 
-// Event Listener für das Formular (sauber getrennt)
+
 uploadForm.addEventListener('submit', handleUpload);
 
-// --- Auth Funktionen ---
+
 window.onload = async () => {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (user) {
