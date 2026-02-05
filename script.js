@@ -393,3 +393,24 @@ async function loadChatOverview() {
         chatList.appendChild(item);
     }
 }
+
+async function checkUnreadMessages() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return;
+
+    const { count, error } = await supabaseClient
+        .from('messages')
+        .select('*', { count: 'exact', head: true })
+        .eq('receiver_id', user.id)
+        .eq('is_read', false);
+
+    if (error) return console.error(error);
+
+    const dot = document.getElementById('unreadDot');
+    if (dot) {
+        dot.style.display = (count > 0) ? 'block' : 'none';
+    }
+}
+
+// Intervall starten, damit der Punkt auch erscheint, wenn man nicht neu lädt
+setInterval(checkUnreadMessages, 10000); // Alle 10 Sekunden prüfen
