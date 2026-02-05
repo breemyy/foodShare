@@ -78,11 +78,11 @@ uploadForm.addEventListener('submit', async (e) => {
         .from('posts')
         .insert([{ 
             title: title, 
+            user_id: user.id,
             category: category, 
             remarks: remarks, 
             image: base64Image,
-            expiry: expiryValue === "" ? null : expiryValue,
-            user_id: user.id
+            expiry: expiryValue === "" ? null : expiryValue
         }]);
 
     if (error) {
