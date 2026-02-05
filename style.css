@@ -23,39 +23,6 @@ header {
     z-index: 1000;
 }
 
-.main-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background: white;
-    border-bottom: 1px solid #eee;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    height: 70px; /* Feste Höhe für ein ruhiges Layout */
-}
-
-/* Alle drei Teile nehmen gleich viel Platz ein */
-.header-left, 
-.logo-area, 
-.header-actions {
-    flex: 1;
-    display: flex;
-}
-
-/* Logo exakt mittig ausrichten */
-.logo-area {
-    justify-content: center;
-    text-align: center;
-}
-
-.logo-area h1 {
-    margin: 0;
-    font-size: 1.5rem;
-    white-space: nowrap; /* Verhindert Zeilenumbruch */
-}
-
 header h1 { margin: 0; color: var(--primary-green); font-size: 1.8rem; }
 header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
 
@@ -302,34 +269,28 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
     position: absolute;
     top: 20px;
     right: 20px;
-    display: flex;
-    gap: 15px;
     z-index: 1000;
-    justify-content: flex-end;
 }
 
 .profile-circle {
-    width: 45px !important;
-    height: 45px !important;
-    overflow: hidden !important; /* DAS HIER STOPPT DAS RIESIGE BILD */
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #2ecc71;
     cursor: pointer;
     background: #eee;
     transition: transform 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .profile-circle:hover {
     transform: scale(1.1);
 }
 
-#userPfp {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important; 
-    display: block;
+.profile-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .profile-container {
@@ -404,4 +365,3 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
     transform: translateX(-3px);
     box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
 }
-
