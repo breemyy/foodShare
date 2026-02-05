@@ -53,7 +53,15 @@ async function loadFeed() {
         foodFeed.appendChild(card);
     });
 }
-
+async function handleUpload(e) {
+    e.preventDefault();
+    
+    
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    
+    if (!user) {
+        alert("Du musst eingeloggt sein, um etwas zu posten!");
+        return;
 
 uploadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -77,6 +85,7 @@ uploadForm.addEventListener('submit', async (e) => {
             remarks: remarks, 
             image: base64Image,
             expiry: expiryValue === "" ? null : expiryValue
+            user_id: user.id,
         }]);
 
     if (error) {
