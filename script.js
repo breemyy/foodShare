@@ -52,6 +52,9 @@ fileInput.addEventListener('change', (e) => {
 });
 
 async function loadPosts() {
+    const foodFeed = document.getElementById('postContainer');
+    if (!foodFeed) return;
+  
     const { data, error } = await supabaseClient
         .from('posts')
         .select(`
@@ -408,7 +411,10 @@ async function loadChatOverview() {
 
         const item = document.createElement('div');
         item.className = 'chat-item';
-        item.onclick = () => openChat(chat.partnerId, chat.postTitle);
+        item.onclick = () => {
+              console.log("Öffne Chat mit:", chat.partnerId); // Test für die Konsole
+              openChat(chat.partnerId, chat.postTitle);
+        };
         
         item.innerHTML = `
             <img src="${profile?.avatar_url || 'https://via.placeholder.com/40'}" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
