@@ -52,7 +52,7 @@ fileInput.addEventListener('change', (e) => {
 });
 
 async function loadPosts() {
-    const foodFeed = document.getElementById('postContainer');
+    const foodFeed = document.getElementById('foodFeed');
     if (!foodFeed) return;
   
     const { data, error } = await supabaseClient
