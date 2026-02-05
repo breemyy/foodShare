@@ -13,19 +13,17 @@ let base64Image = "";
 async function checkUserSession() {
     const authOverlay = document.getElementById('authOverlay');
     
-    const { data: { session }, error } = await supabaseClient.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
 
-    if (session && session.user) {
-        console.log("User eingeloggt:", session.user.email);
+    if (session) {
+        console.log("Session aktiv, bleibe auf der Seite.");
+        authOverlay.classList.remove('show'); 
         
-        if (authOverlay) authOverlay.style.display = 'none';
-        
-        loadPosts(); 
-        loadHeaderProfilePicture();
+        if (typeof loadPosts === "function") loadPosts();
+        if (typeof loadHeaderProfilePicture === "function") loadHeaderProfilePicture();
     } else {
-        console.log("Kein User gefunden, zeige Login.");
-        
-        if (authOverlay) authOverlay.style.display = 'flex';
+        console.log("Keine Session, zeige Login.");
+        authOverlay.classList.add('show');
     }
 }
 
@@ -167,8 +165,8 @@ async function handleSignIn() {
     if (error) {
         alert("Login fehlgeschlagen: " + error.message);
     } else {
-        document.getElementById('authOverlay').style.display = 'none';
-        loadPosts();
+        document.getElementById('authOverlay').classList.remove('show');
+        location.reload();
     }
 }
 
