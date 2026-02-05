@@ -416,7 +416,7 @@ async function loadChatOverview() {
                 </div>
                 <p><strong>${chat.postTitle}:</strong> ${chat.lastMessage.substring(0, 30)}...</p>
             </div>
-            ${chat.unread ? '<span class="unread-badge">Neu</span>' : ''}
+            ${chat.unread ? '<span class="unread-badge"></span>' : ''}
         `;
         chatList.appendChild(item);
     }
