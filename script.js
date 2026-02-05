@@ -255,3 +255,79 @@ async function loadHeaderProfilePicture() {
 
 
 document.addEventListener('DOMContentLoaded', loadHeaderProfilePicture);
+
+
+//CHAT FUNKTION
+
+let currentReceiverId = "";
+let currentPostTitle = "";
+
+async function openChat(receiverId, postTitle) {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return alert("Logge dich ein, um zu chatten!");
+    if (user.id === receiverId) return alert("Du kannst dir nicht selbst schreiben!");
+
+    currentReceiverId = receiverId;
+    currentPostTitle = postTitle;
+    
+    document.getElementById('chatTitle').innerText = "Anfrage: " + postTitle;
+    document.getElementById('chatOverlay').style.display = 'flex';
+    
+    loadMessages();
+}
+
+function closeChat() {
+    document.getElementById('chatOverlay').style.display = 'none';
+}
+
+async function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    if (!message) return;
+
+    const { data: { user } } = await supabaseClient.auth.getUser();
+
+    const { error } = await supabaseClient.from('messages').insert([{
+        sender_id: user.id,
+        receiver_id: currentReceiverId,
+        post_title: currentPostTitle,
+        content: message
+    }]);
+
+    if (error) alert("Fehler beim Senden");
+    else {
+        input.value = "";
+        loadMessages(); // Liste aktualisieren
+    }
+}
+
+async function loadMessages() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    
+    // Holt alle Nachrichten zwischen diesen zwei Personen für dieses Essen
+    const { data, error } = await supabaseClient
+        .from('messages')
+        .select('*')
+        .or(`and(sender_id.eq.${user.id},receiver_id.eq.${currentReceiverId}),and(sender_id.eq.${currentReceiverId},receiver_id.eq.${user.id})`)
+        .eq('post_title', currentPostTitle)
+        .order('created_at', { ascending: true });
+
+    const chatBox = document.getElementById('chatMessages');
+    chatBox.innerHTML = "";
+
+    data?.forEach(msg => {
+        const msgDiv = document.createElement('div');
+        const isMe = msg.sender_id === user.id;
+        
+        msgDiv.style.alignSelf = isMe ? 'flex-end' : 'flex-start';
+        msgDiv.style.background = isMe ? '#2ecc71' : '#eee';
+        msgDiv.style.color = isMe ? 'white' : 'black';
+        msgDiv.style.padding = '8px 12px';
+        msgDiv.style.borderRadius = '12px';
+        msgDiv.style.maxWidth = '80%';
+        msgDiv.innerText = msg.content;
+        
+        chatBox.appendChild(msgDiv);
+    });
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
