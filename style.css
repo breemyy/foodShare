@@ -294,6 +294,7 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
 }
 
 .profile-card {
+    position: relative;
     background: white;
     width: 100%;
     max-width: 400px;
@@ -328,3 +329,31 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
     background: #2ecc71; color: white; border: none;
     border-radius: 10px; cursor: pointer; font-weight: bold;
 }
+
+
+.back-circle-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    border: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #2ecc71; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.back-circle-btn:hover {
+    background-color: #2ecc71;
+    color: white;
+    transform: translateX(-3px);
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+}
+
