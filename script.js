@@ -9,6 +9,24 @@ const dropzone = document.getElementById('dropzone');
 
 let base64Image = "";
 
+async function initApp() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+
+    if (session) {
+        console.log("Session aktiv.");
+        if (authOverlay) authOverlay.style.display = 'none';
+        
+        // Daten erst laden, wenn wir sicher eingeloggt sind
+        loadPosts();
+        loadHeaderProfilePicture();
+    } else {
+        console.log("Keine Session.");
+        if (authOverlay) authOverlay.style.display = 'flex';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initApp);
+
 dropzone.addEventListener('click', () => fileInput.click());
 
 fileInput.addEventListener('change', (e) => {
