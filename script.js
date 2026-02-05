@@ -4,158 +4,101 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const uploadForm = document.getElementById('uploadForm');
 const foodFeed = document.getElementById('foodFeed');
-const fileInput = document.getElementById('fileInput');
-const dropzone = document.getElementById('dropzone');
+const authOverlay = document.getElementById('authOverlay');
 
 let base64Image = "";
 
-
-async function checkUserSession() {
-    const authOverlay = document.getElementById('authOverlay');
-    
+// ==========================================
+// 1. ZENTRALE AUTH-STEUERUNG
+// ==========================================
+async function initApp() {
     const { data: { session } } = await supabaseClient.auth.getSession();
 
     if (session) {
-        console.log("Session aktiv, bleibe auf der Seite.");
-        authOverlay.classList.remove('show'); 
+        console.log("Session aktiv.");
+        if (authOverlay) authOverlay.style.display = 'none';
         
-        if (typeof loadPosts === "function") loadPosts();
-        if (typeof loadHeaderProfilePicture === "function") loadHeaderProfilePicture();
+        // Daten erst laden, wenn wir sicher eingeloggt sind
+        loadPosts();
+        loadHeaderProfilePicture();
     } else {
-        console.log("Keine Session, zeige Login.");
-        authOverlay.classList.add('show');
+        console.log("Keine Session.");
+        if (authOverlay) authOverlay.style.display = 'flex';
     }
 }
 
-checkUserSession();
+// Starte die App sofort beim Laden
+document.addEventListener('DOMContentLoaded', initApp);
 
+// ==========================================
+// 2. PROFILBILD IM HEADER LADEN
+// ==========================================
+async function loadHeaderProfilePicture() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return;
+
+    const { data: profile } = await supabaseClient
+        .from('profiles')
+        .select('avatar_url')
+        .eq('id', user.id)
+        .single();
+
+    const headerPfp = document.getElementById('userPfp');
+    if (headerPfp && profile?.avatar_url) {
+        headerPfp.src = profile.avatar_url;
+        // WICHTIG: Hier im JS sicherstellen, dass das Bild klein bleibt
+        headerPfp.style.width = '100%';
+        headerPfp.style.height = '100%';
+        headerPfp.style.objectFit = 'cover';
+    }
+}
+
+// ==========================================
+// 3. POSTS LADEN
+// ==========================================
 async function loadPosts() {
+    if (!foodFeed) return;
+
     const { data, error } = await supabaseClient
         .from('posts')
-        .select(`
-            *,
-            profiles ( username )
-        `);
+        .select(`*, profiles ( username )`)
+        .order('created_at', { ascending: false }); // Neueste zuerst
 
-    if (error) {
-        console.error(error);
-        return;
-    }
+    if (error) return console.error(error);
     
     foodFeed.innerHTML = '';
 
-  data.forEach(post => {
-    const card = document.createElement('div');
-    card.className = 'food-card';
-    const expiryDate = post.expiry ? new Date(post.expiry).toLocaleDateString('de-DE') : 'k.A.';
+    data.forEach(post => {
+        const card = document.createElement('div');
+        card.className = 'food-card';
+        const expiryDate = post.expiry ? new Date(post.expiry).toLocaleDateString('de-DE') : 'k.A.';
 
-    card.innerHTML = `
-        <div class="card-image-container">
-            <img src="${post.image}" class="food-img">
-            <span class="category-badge">${post.category || 'Food'}</span>
-        </div>
-        <div class="card-content">
-            <div class="card-header">
-                <h3>${post.title}</h3>
-                <p class="remarks">${post.remarks || 'Keine weiteren Angaben'}</p>
+        card.innerHTML = `
+            <div class="card-image-container">
+                <img src="${post.image}" class="food-img">
+                <span class="category-badge">${post.category || 'Food'}</span>
             </div>
-            
-            <div class="card-footer">
-                <div class="user-info">
-                    <span>⏳ ${expiryDate}</span>
-                    <span>👤 ${post.profiles?.username || 'Anonym'}</span>
+            <div class="card-content">
+                <div class="card-header">
+                    <h3>${post.title}</h3>
+                    <p class="remarks">${post.remarks || 'Keine weiteren Angaben'}</p>
                 </div>
-                <button class="request-btn" onclick="openChat('${post.user_id}', '${post.title}')">
-                    Anfragen
-                </button>
+                <div class="card-footer">
+                    <div class="user-info">
+                        <span>⏳ ${expiryDate}</span>
+                        <span>👤 ${post.profiles?.username || 'Anonym'}</span>
+                    </div>
+                    <button class="request-btn" onclick="openChat('${post.user_id}', '${post.title}')">Anfragen</button>
+                </div>
             </div>
-        </div>
-    `;
-    foodFeed.appendChild(card);
-});
-}
-
-
-async function handleUpload(e) {
-    e.preventDefault();
-    
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    
-    if (!user) {
-        alert("Du musst eingeloggt sein, um etwas zu posten!");
-        return;
-    }
-
-    if (!base64Image) {
-        alert("Bitte erst ein Foto hochladen!");
-        return;
-    }
-
-    const title = document.getElementById('titleInput').value;
-    const category = document.getElementById('categorySelect').value;
-    const remarks = document.getElementById('remarksInput').value;
-    const expiryValue = document.getElementById('expiryInput').value;
-
-    const { error } = await supabaseClient
-        .from('posts')
-        .insert([{ 
-            title: title, 
-            user_id: user.id,
-            category: category, 
-            remarks: remarks, 
-            image: base64Image,
-            expiry: expiryValue === "" ? null : expiryValue
-        }]);
-
-    if (error) {
-        alert("Fehler: " + error.message);
-    } else {
-        alert("Erfolgreich geteilt!");
-        uploadForm.reset();
-        base64Image = ""; 
-        document.getElementById('previewContainer').innerHTML = '';
-        document.getElementById('dropzone-text').style.display = 'block';
-        loadPosts();
-    }
-}
-
-
-uploadForm.addEventListener('submit', handleUpload);
-
-
-window.onload = async () => {
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    if (user) {
-        document.getElementById('authOverlay').style.display = 'none';
-        loadPosts();
-    }
-};
-
-async function handleSignUp() {
-    const email = document.getElementById('emailInput').value.trim();
-    const password = document.getElementById('passwordInput').value;
-    const username = document.getElementById('usernameInput').value.trim();
-
-    if (!email || !password || !username) {
-        alert("Bitte alle Felder ausfüllen!");
-        return;
-    }
-
-    const { data, error } = await supabaseClient.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-            data: { username: username }
-        }
+        `;
+        foodFeed.appendChild(card);
     });
-
-    if (error) {
-        alert("Registrierungs-Fehler: " + error.message);
-    } else {
-        alert("Registrierung erfolgreich! Bitte bestätige deine E-Mail.");
-    }
 }
-    
+
+// ==========================================
+// 4. LOGIN / SIGNUP LOGIK
+// ==========================================
 async function handleSignIn() {
     const email = document.getElementById('emailInput').value.trim();
     const password = document.getElementById('passwordInput').value;
@@ -165,26 +108,32 @@ async function handleSignIn() {
     if (error) {
         alert("Login fehlgeschlagen: " + error.message);
     } else {
-        document.getElementById('authOverlay').classList.remove('show');
-        location.reload();
+        location.reload(); // Seite neu laden, um initApp zu triggern
     }
 }
 
-async function updateProfileCircle() {
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    if (user) {
-        const { data: profile } = await supabaseClient
-            .from('profiles')
-            .select('avatar_url')
-            .eq('id', user.id)
-            .single();
+async function handleSignUp() {
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('passwordInput').value;
+    const username = document.getElementById('usernameInput').value.trim();
 
-        if (profile?.avatar_url) {
-            document.getElementById('userPfp').src = profile.avatar_url;
-        }
-    }
+    const { data, error } = await supabaseClient.auth.signUp({
+        email, password,
+        options: { data: { username } }
+    });
+
+    if (error) alert("Fehler: " + error.message);
+    else alert("Check deine E-Mails zur Bestätigung!");
 }
 
+async function handleSignOut() {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'index.html';
+}
+
+// ==========================================
+// 5. PROFILFUNKTIONEN
+// ==========================================
 function goToProfile() {
     window.location.href = 'profile.html';
 }
@@ -194,44 +143,49 @@ async function uploadPhoto(event) {
     if (!file) return;
 
     const { data: { user } } = await supabaseClient.auth.getUser();
-    const filePath = `${user.id}-${Math.random()}.png`; 
+    // Cache-Busting durch Zufallszahl im Namen
+    const filePath = `avatars/${user.id}-${Date.now()}.png`;
+
     const { error: uploadError } = await supabaseClient.storage
         .from('avatars')
         .upload(filePath, file, { upsert: true });
 
-    if (uploadError) return alert("Fehler: " + uploadError.message);
+    if (uploadError) return alert("Upload-Fehler: " + uploadError.message);
 
     const { data: { publicUrl } } = supabaseClient.storage.from('avatars').getPublicUrl(filePath);
 
     await supabaseClient.from('profiles').update({ avatar_url: publicUrl }).eq('id', user.id);
     
-    document.getElementById('profileDisplay').src = publicUrl;
+    // UI Update
+    const display = document.getElementById('profileDisplay');
+    if (display) display.src = publicUrl;
     alert("Profilbild aktualisiert!");
+    loadHeaderProfilePicture();
 }
 
-async function handleSignOut() {
-    await supabaseClient.auth.signOut();
-    window.location.href = 'index.html';
-}
+// ==========================================
+// 6. UPLOAD FORMULAR FÜR POSTS
+// ==========================================
+if (uploadForm) {
+    uploadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        
+        if (!user || !base64Image) return alert("Bitte Foto und Login prüfen!");
 
-async function loadHeaderProfilePicture() {
-    const { data: { user } } = await supabaseClient.auth.getUser();
+        const { error } = await supabaseClient.from('posts').insert([{ 
+            title: document.getElementById('titleInput').value, 
+            user_id: user.id,
+            category: document.getElementById('categorySelect').value, 
+            remarks: document.getElementById('remarksInput').value, 
+            image: base64Image,
+            expiry: document.getElementById('expiryInput').value || null
+        }]);
 
-    if (user) {
-        const { data: profile, error } = await supabaseClient
-            .from('profiles')
-            .select('avatar_url')
-            .eq('id', user.id)
-            .single();
-
-       
-        if (profile && profile.avatar_url) {
-            const headerPfp = document.getElementById('userPfp');
-            if (headerPfp) {
-                headerPfp.src = profile.avatar_url;
-            }
+        if (error) alert(error.message);
+        else {
+            alert("Erfolgreich geteilt!");
+            location.reload();
         }
-    }
+    });
 }
-
-document.addEventListener('DOMContentLoaded', loadHeaderProfilePicture);
