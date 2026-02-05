@@ -107,14 +107,33 @@ async function handleSignUp() {
     const password = document.getElementById('passwordInput').value;
     const username = document.getElementById('usernameInput').value;
 
-    const { data, error } = await supabaseClient.auth.signUp({ email, password });
+   
+    const { data, error } = await supabaseClient.auth.signUp({
+        email: email,
+        password: password
+    });
 
-    if (error) return alert("Fehler: " + error.message);
-    
-    
+    if (error) {
+        alert("Registrierungs-Fehler: " + error.message);
+        return;
+    }
+
     if (data.user) {
-        await supabaseClient.from('profiles').insert([{ id: data.user.id, username: username }]);
-        alert("Account erstellt! Du kannst dich jetzt einloggen.");
+        const { error: profileError } = await supabaseClient
+            .from('profiles')
+            .insert([
+                { 
+                    id: data.user.id, 
+                    username: username 
+                }
+            ]);
+
+        if (profileError) {
+            console.error("Profil konnte nicht gespeichert werden:", profileError);
+            alert("Fehler beim Profil-Speichern: " + profileError.message);
+        } else {
+            alert("Registrierung und Profil erfolgreich!");
+        }
     }
 }
 
