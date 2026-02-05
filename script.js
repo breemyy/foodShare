@@ -1,4 +1,3 @@
-// 1. Supabase Verbindung (WERTE HIER ERSETZEN)
 const SUPABASE_URL = 'https://kdsshxteunozizxotibn.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_HJmiLsA5ijBt3_Io_9sJ7A_BdbjDC8a';
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -10,7 +9,7 @@ const dropzone = document.getElementById('dropzone');
 
 let base64Image = "";
 
-// Bild-Upload Logik (Vorschau & Umwandlung)
+
 dropzone.addEventListener('click', () => fileInput.click());
 
 fileInput.addEventListener('change', (e) => {
@@ -24,7 +23,7 @@ fileInput.addEventListener('change', (e) => {
     if (file) reader.readAsDataURL(file);
 });
 
-// 2. Funktion: Alle Anzeigen laden
+
 async function loadFeed() {
     foodFeed.innerHTML = '<p>Lade leckeres Essen...</p>';
     
@@ -55,7 +54,7 @@ async function loadFeed() {
     });
 }
 
-// 3. Funktion: Anzeige erstellen
+
 uploadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -86,9 +85,8 @@ uploadForm.addEventListener('submit', async (e) => {
         uploadForm.reset();
         document.getElementById('previewContainer').innerHTML = '';
         document.getElementById('dropzone-text').style.display = 'block';
-        loadFeed(); // Liste neu laden
+        loadFeed();
     }
 });
 
-// Start
 loadFeed();
