@@ -433,3 +433,26 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
     border: 2px solid white;
     border-radius: 50%;
 }
+
+.back-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.back-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.back-icon {
+    font-size: 24px;
+    color: #2ecc71; /* Passend zu deinem Grün */
+    font-weight: bold;
+}
