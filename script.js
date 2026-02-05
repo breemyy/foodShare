@@ -68,6 +68,7 @@ uploadForm.addEventListener('submit', async (e) => {
         alert("Bitte erst ein Foto hochladen!");
         return;
     }
+}
 
     const title = document.getElementById('titleInput').value;
     const category = document.getElementById('categorySelect').value;
