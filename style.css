@@ -421,9 +421,9 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
     font-size: 30px;
 }
 
-/* Der rote Benachrichtigungs-Punkt */
+
 .notification-dot {
-    display: none; /* Wird per JS aktiviert */
+    display: none; 
     position: absolute;
     top: 2px;
     right: 2px;
@@ -434,25 +434,23 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
     border-radius: 50%;
 }
 
-.back-btn {
-    background: #2ecc71;
-    border: none;
-    cursor: pointer;
+.chat-time {
+    font-size: 0.75rem;
+    color: #999;
+    white-space: nowrap;
+    margin-left: 10px;
+    align-self: flex-start;
+}
+
+.chat-item {
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    transition: background-color 0.2s;
-}
-
-.back-btn:hover {
-    background-color: #27ae60;
-}
-
-.back-icon {
-    font-size: 24px;
-    color: white; 
-    font-weight: bold;
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: transform 0.1s;
+    position: relative; 
 }
