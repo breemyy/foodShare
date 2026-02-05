@@ -67,7 +67,7 @@ uploadForm.addEventListener('submit', async (e) => {
     if (!base64Image) {
         alert("Bitte erst ein Foto hochladen!");
         return;
-    }
+    });
 }
 
     const title = document.getElementById('titleInput').value;
