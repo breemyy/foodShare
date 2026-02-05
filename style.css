@@ -120,6 +120,13 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
     background: rgba(0,0,0,0.8); display: flex; align-items: center; 
     justify-content: center; z-index: 1000;
 }
+
+#authOverlay {
+    display: none; /* WICHTIG: Standardmäßig aus */
+    position: fixed;
+    /* ... restlicher Style ... */
+}
+
 .auth-box {
     background: white; padding: 2rem; border-radius: 12px; 
     text-align: center; width: 90%; max-width: 400px;
