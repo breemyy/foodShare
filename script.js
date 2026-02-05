@@ -155,4 +155,4 @@ async function handleSignIn() {
         document.getElementById('authOverlay').style.display = 'none';
         loadPosts();
     }
-}
+};
