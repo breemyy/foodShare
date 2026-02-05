@@ -331,3 +331,65 @@ async function loadMessages() {
     });
     chatBox.scrollTop = chatBox.scrollHeight;
 }
+
+async function loadChatOverview() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return;
+
+    // Alle Nachrichten laden, an denen ich beteiligt bin
+    const { data: messages, error } = await supabaseClient
+        .from('messages')
+        .select('*')
+        .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
+        .order('created_at', { ascending: false });
+
+    const chatList = document.getElementById('chatList');
+    chatList.innerHTML = "";
+
+    if (messages.length === 0) {
+        chatList.innerHTML = "<p style='text-align:center;'>Noch keine Nachrichten vorhanden.</p>";
+        return;
+    }
+
+    // Chats gruppieren (nach Gesprächspartner + Post)
+    const chats = {};
+    messages.forEach(m => {
+        const partnerId = (m.sender_id === user.id) ? m.receiver_id : m.sender_id;
+        const chatKey = partnerId + "_" + m.post_title;
+        
+        if (!chats[chatKey]) {
+            chats[chatKey] = {
+                partnerId: partnerId,
+                lastMessage: m.content,
+                postTitle: m.post_title,
+                unread: (m.receiver_id === user.id && !m.is_read)
+            };
+        }
+    });
+
+    // Für jeden Chat eine Zeile generieren
+    for (const key in chats) {
+        const chat = chats[key];
+        
+        // Optional: Namen des Partners aus Profilen laden
+        const { data: profile } = await supabaseClient
+            .from('profiles')
+            .select('username, avatar_url')
+            .eq('id', chat.partnerId)
+            .single();
+
+        const item = document.createElement('div');
+        item.className = 'chat-item';
+        item.onclick = () => openChat(chat.partnerId, chat.postTitle);
+        
+        item.innerHTML = `
+            <img src="${profile?.avatar_url || 'https://via.placeholder.com/40'}" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
+            <div class="chat-info">
+                <h4>${profile?.username || 'Anonym'}</h4>
+                <p><strong>${chat.postTitle}:</strong> ${chat.lastMessage.substring(0, 30)}...</p>
+            </div>
+            ${chat.unread ? '<span class="unread-badge">Neu</span>' : ''}
+        `;
+        chatList.appendChild(item);
+    }
+}
