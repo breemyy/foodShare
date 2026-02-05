@@ -379,20 +379,27 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
 
 .chat-item:hover { transform: scale(1.01); }
 
-.chat-info {
-    margin-left: 15px;
-    flex-grow: 1;
-}
 
 .chat-info h4 { margin: 0; color: #333; }
 .chat-info p { margin: 4px 0 0; font-size: 0.9rem; color: #666; }
 
 .unread-badge {
-    width: 10px;
-    height: 10px;
-    background-color: #2ecc71; /* Dein Grün */
+    width: 14px;         /* Vorher 10px - jetzt deutlich präsenter */
+    height: 14px;        /* Vorher 10px */
+    background-color: #2ecc71; 
     border-radius: 50%;
     flex-shrink: 0;
+    margin-left: 15px;   /* Schafft Platz zum Text */
+    align-self: center;  /* Zentriert den Punkt vertikal zur Kachel */
+    box-shadow: 0 0 8px rgba(46, 204, 113, 0.4); /* Ein leichter Glow-Effekt */
+}
+
+/* Falls du den Punkt innerhalb der Info-Box weiter unten haben willst: */
+.chat-info {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .floating-chat-btn {
