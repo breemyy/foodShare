@@ -50,7 +50,7 @@ async function loadPosts() {
         <div class="card-content">
             <div class="card-header">
                 <h3>${post.title}</h3>
-                <p class="remarks">${post.remarks || ''}</p>
+                <p class="remarks">${post.remarks || 'Keine weiteren Angaben'}</p>
             </div>
             
             <div class="card-footer">
