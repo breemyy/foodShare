@@ -628,31 +628,44 @@ input:checked + .slider:before { transform: translateX(18px); }
 
 /* Erfasst den gesamten Hintergrund der Seite */
 html.dark-mode, 
+/* --- Optimierter Darkmode --- */
+
+/* 1. Der allgemeine Hintergrund (etwas heller als tiefschwarz) */
 body.dark-mode {
     background-color: #121212 !important;
-    color: #f5f5f5 !important;
+    color: #e0e0e0 !important;
 }
 
-/* Navigationsleisten oder Header, falls vorhanden */
+/* 2. Der Header oben (Dunkelgrün) */
 body.dark-mode header, 
-body.dark-mode .container {
-    background-color: #121212 !important;
+body.dark-mode .nav-top, /* Falls dein Header so heißt */
+body.dark-mode div[style*="background-color: black"] { /* Erfasst schwarze Header-Container */
+    background-color: #1b4d3e !important; /* Edles Dunkelgrün */
+    border-bottom: 2px solid #2ecc71;
 }
 
-/* Karten und Overlays */
+/* 3. Die Haupt-Container (Karten) - Sollen sich abheben */
+body.dark-mode .container, 
 body.dark-mode .profile-card, 
-body.dark-mode .settings-drawer, 
-body.dark-mode .food-card,
 body.dark-mode .auth-card,
-body.dark-mode .chat-container {
-    background-color: #1e1e1e !important;
-    color: #ffffff !important;
+body.dark-mode .settings-drawer {
+    background-color: #1e1e1e !important; /* Deutlich heller als der Body */
     border: 1px solid #333 !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
 }
 
-/* Inputs und Buttons im Darkmode */
-body.dark-mode input {
-    background-color: #2a2a2a !important;
-    color: white !important;
+/* 4. Eingabefelder (Inputs) - Damit sie nicht "leer" wirken */
+body.dark-mode input, 
+body.dark-mode select, 
+body.dark-mode textarea {
+    background-color: #252525 !important;
     border: 1px solid #444 !important;
+    color: #ffffff !important;
+}
+
+/* 5. Der gestrichelte Upload-Bereich */
+body.dark-mode .upload-card, /* Passe die Klasse ggf. an */
+body.dark-mode div[style*="border: 2px dashed"] {
+    border-color: #2ecc71 !important;
+    background-color: #2a2a2a !important;
 }
