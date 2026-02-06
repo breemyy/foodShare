@@ -621,3 +621,59 @@ input:checked + .slider:before { transform: translateX(18px); }
 #settingsBtn:hover {
     transform: rotate(90deg); /* Das Zahnrad dreht sich beim Drüberfahren! */
 }
+
+///////////////////////////////
+//////////DARKMODE/////////////
+///////////////////////////////
+
+/* --- DARK MODE BASICS --- */
+
+/* Wenn body die Klasse .dark-mode hat, ändern sich diese Elemente */
+body.dark-mode {
+    background-color: #121212 !important; /* Sehr dunkles Grau/Schwarz */
+    color: #f5f5f5 !important;
+}
+
+/* Karten und Container im Dark Mode */
+body.dark-mode .profile-card, 
+body.dark-mode .settings-drawer, 
+body.dark-mode .food-card,
+body.dark-mode .auth-card {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+    border-color: #333 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Texte im Dark Mode anpassen */
+body.dark-mode h1, 
+body.dark-mode h2, 
+body.dark-mode h3, 
+body.dark-mode span,
+body.dark-mode p {
+    color: #ffffff !important;
+}
+
+/* Die Einstellungs-Zeilen im Drawer */
+body.dark-mode .setting-row {
+    border-bottom: 1px solid #333 !important;
+}
+
+body.dark-mode .setting-row:hover {
+    background-color: #2a2a2a !important;
+}
+
+/* Input Felder im Dark Mode */
+body.dark-mode input[type="text"],
+body.dark-mode input[type="password"],
+body.dark-mode input[type="email"] {
+    background-color: #2a2a2a !important;
+    color: white !important;
+    border: 1px solid #444 !important;
+}
+
+/* Den Logout-Button im Drawer anpassen */
+body.dark-mode .logout-btn-simple {
+    background-color: #2a2a2a !important;
+    border-color: #444 !important;
+}
