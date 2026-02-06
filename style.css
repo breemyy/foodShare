@@ -627,9 +627,9 @@ input:checked + .slider:before { transform: translateX(18px); }
 ///////////////////////////////
 
 /* Erfasst den gesamten Hintergrund der Seite */
-html.dark-mode, 
-/* --- Optimierter Darkmode --- */
-
+html.dark-mode {
+    background-color: #0f0f0f !important; /* Ein fast schwarzes Anthrazit */
+}
 /* 1. Der allgemeine Hintergrund (etwas heller als tiefschwarz) */
 body.dark-mode {
     background-color: #121212 !important;
@@ -668,4 +668,16 @@ body.dark-mode .upload-card, /* Passe die Klasse ggf. an */
 body.dark-mode div[style*="border: 2px dashed"] {
     border-color: #2ecc71 !important;
     background-color: #2a2a2a !important;
+}
+/* Placeholder-Farbe im Darkmode anpassen */
+body.dark-mode ::placeholder {
+    color: #888 !important;
+    opacity: 1;
+}
+
+/* Label-Texte weiß machen */
+body.dark-mode label, 
+body.dark-mode h2, 
+body.dark-mode p {
+    color: #ffffff !important;
 }
