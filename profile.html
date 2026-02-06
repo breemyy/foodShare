@@ -89,7 +89,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
 <script>
-    <script>
+
     async function initProfile() {
         // 1. Session & Profil laden (dein bestehender Code)
         const { data: { user } } = await supabaseClient.auth.getUser();
@@ -140,7 +140,6 @@
     }
 
     initProfile();
-</script>
 </script>
 </body>
 </html>
