@@ -554,21 +554,27 @@ document.querySelectorAll('.cat-badge').forEach(badge => {
 ///////////////SETTINGS//////////////////
 /////////////////////////////////////////
 
-// Öffnen
-const settingsBtn = document.getElementById('settingsBtn');
-if (settingsBtn) {
-    settingsBtn.onclick = () => {
-        document.getElementById('settingsDrawer').classList.add('open');
-        document.getElementById('drawerOverlay').style.display = 'block';
-    };
-}
+// Sicherstellen, dass der Code erst läuft, wenn alles geladen ist
+document.addEventListener('DOMContentLoaded', () => {
+    const settingsBtn = document.getElementById('settingsBtn');
+    const drawer = document.getElementById('settingsDrawer');
+    const overlay = document.getElementById('drawerOverlay');
 
-// Schließen
+    if (settingsBtn && drawer && overlay) {
+        settingsBtn.addEventListener('click', () => {
+            console.log("Zahnrad geklickt!"); // Teste das in der Konsole (F12)
+            drawer.classList.add('open');
+            overlay.style.display = 'block';
+        });
+    } else {
+        console.error("Einstellungen-Elemente nicht gefunden!");
+    }
+});
+
 function closeSettings() {
     document.getElementById('settingsDrawer').classList.remove('open');
     document.getElementById('drawerOverlay').style.display = 'none';
 }
-
 // 1. Username ändern per Prompt (einfachste Lösung)
 async function changeUsername() {
     const newName = prompt("Gib deinen neuen Usernamen ein:");
