@@ -529,21 +529,34 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
     font-weight: bold;
 }
 
-.settings-list {
-    text-align: left;
-    margin-top: 25px;
-    width: 100%;
+.settings-drawer {
+    position: fixed;
+    top: 0;
+    right: -350px; /* Startposition außerhalb */
+    width: 300px;
+    height: 100vh; /* Volle Höhe */
+    background: white;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+    transition: all 0.4s ease-in-out; /* Weicher Slide-Effekt */
+    z-index: 9999 !important; /* Ganz nach vorne! */
+    padding: 20px;
 }
 
-.settings-list h3 {
-    font-size: 0.9rem;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-    padding-left: 5px;
+/* Diese Klasse schiebt das Menü rein */
+.settings-drawer.open {
+    right: 0 !important;
 }
 
+.drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    z-index: 9998; /* Direkt hinter dem Drawer */
+}
 .setting-row {
     display: flex;
     justify-content: space-between;
