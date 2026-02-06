@@ -56,6 +56,12 @@ fileInput.addEventListener('change', (e) => {
 
 async function loadPosts() {
   
+    foodFeed.innerHTML = `
+        <div style="text-align:center; padding:50px;">
+            <span style="font-size:3rem; display:block; margin-bottom:10px;">🍲</span>
+            <p>Leckeres Essen wird geladen...</p>
+        </div>
+    `;
     const { data, error } = await supabaseClient
         .from('posts')
         .select(`
@@ -64,16 +70,22 @@ async function loadPosts() {
         `);
 
     if (error) {
-        console.error(error);
+        console.error("Fehler beim Laden der Posts:", error);
+        postContainer.innerHTML = '<p>Fehler beim Laden der Speisen.</p>';
         return;
     }
     
     foodFeed.innerHTML = '';
 
-  data.forEach(post => {
-    const card = document.createElement('div');
-    card.className = 'food-card';
-    const expiryDate = post.expiry ? new Date(post.expiry).toLocaleDateString('de-DE') : 'k.A.';
+    if (data.length === 0) {
+        postContainer.innerHTML = '<p style="text-align:center;">Aktuell gibt es leider kein Essen in deiner Nähe.</p>';
+        return;
+    }
+
+    data.forEach(post => {
+      const card = document.createElement('div');
+      card.className = 'food-card';
+      const expiryDate = post.expiry ? new Date(post.expiry).toLocaleDateString('de-DE') : 'k.A.';
 
     card.innerHTML = `
         <div class="card-image-container">
