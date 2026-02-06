@@ -461,3 +461,8 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
     transition: transform 0.1s;
     position: relative; 
 }
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
