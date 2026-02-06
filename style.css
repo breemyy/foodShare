@@ -11,6 +11,12 @@ body {
     color: var(--text-dark);
     margin: 0;
     padding: 0;
+    -ms-overflow-style: none;  /* Internet Explorer und Edge */
+        scrollbar-width: none;     /* Firefox */
+}
+/* Versteckt die Scrollbar für Chrome, Safari und Opera */
+body::-webkit-scrollbar {
+  display: none;
 }
 
 
