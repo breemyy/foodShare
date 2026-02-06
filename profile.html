@@ -89,7 +89,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
 <script>
+    <script>
     async function initProfile() {
+        // 1. Session & Profil laden (dein bestehender Code)
         const { data: { user } } = await supabaseClient.auth.getUser();
         if (!user) {
             window.location.href = 'index.html';
@@ -110,7 +112,6 @@
             }
         }
 
-        
         const { count: postCount } = await supabaseClient
             .from('posts')
             .select('*', { count: 'exact', head: true })
@@ -118,10 +119,28 @@
         
         document.getElementById('countSpenden').innerText = postCount || 0;
 
-       
+        // --- 2. HIER DIE BUTTON-LOGIK DIREKT AKTIVIEREN ---
+        const settingsBtn = document.getElementById('settingsBtn');
+        const drawer = document.getElementById('settingsDrawer');
+        const overlay = document.getElementById('drawerOverlay');
+
+        if (settingsBtn) {
+            settingsBtn.onclick = function() {
+                console.log("Zahnrad wurde gedrückt!");
+                drawer.classList.add('open');
+                overlay.style.display = 'block';
+            };
+        }
+    }
+
+    // Diese Funktion muss global verfügbar sein für das X und das Overlay
+    function closeSettings() {
+        document.getElementById('settingsDrawer').classList.remove('open');
+        document.getElementById('drawerOverlay').style.display = 'none';
     }
 
     initProfile();
+</script>
 </script>
 </body>
 </html>
