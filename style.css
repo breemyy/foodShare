@@ -37,12 +37,16 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
 
 #searchBar {
     width: 100%;
-    padding: 15px;
-    border: 1px solid #dfe6e9;
-    border-radius: 12px;
-    font-size: 1rem;
-    box-sizing: border-box;
+    padding: 15px 25px;
+    border-radius: 30px;
+    border: 2px solid #2ecc71; /* Dein Grün */
+    font-size: 1.1rem;
     outline: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+#mainSearch:focus {
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
 }
 
 .categories {
