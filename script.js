@@ -18,6 +18,29 @@ const dropzone = document.getElementById('dropzone');
 
 let base64Image = "";
 
+// Diese Funktion läuft sofort, wenn die script.js geladen wird
+(function applyTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark-mode');
+        document.body.classList.add('dark-mode');
+    }
+})();
+
+// Die Funktion für den Schalter im Drawer
+function toggleDarkMode() {
+    const isDark = document.getElementById('darkModeToggle').checked;
+    if (isDark) {
+        document.documentElement.classList.add('dark-mode');
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        document.documentElement.classList.remove('dark-mode');
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+    }
+}
+
 async function checkUserSession() {
     const authOverlay = document.getElementById('authOverlay');
     
@@ -582,14 +605,4 @@ async function requestPasswordReset() {
     }
 }
 
-// 3. Darkmode Toggle
-function toggleDarkMode() {
-    const isDark = document.getElementById('darkModeToggle').checked;
-    if (isDark) {
-        document.body.classList.add('dark-mode');
-        localStorage.setItem('theme', 'dark');
-    } else {
-        document.body.classList.remove('dark-mode');
-        localStorage.setItem('theme', 'light');
-    }
-}
+
