@@ -613,3 +613,11 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
 
 input:checked + .slider { background-color: #2ecc71; }
 input:checked + .slider:before { transform: translateX(18px); }
+
+#settingsBtn {
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+#settingsBtn:hover {
+    transform: rotate(90deg); /* Das Zahnrad dreht sich beim Drüberfahren! */
+}
