@@ -520,17 +520,29 @@ if (searchBar) {
     });
 }
 
-// 2. Logik für die Kategorie-Badges
 document.querySelectorAll('.cat-badge').forEach(badge => {
     badge.addEventListener('click', function() {
-        // Optisches Feedback: 'active' Klasse verschieben
+        // 1. Optisches Feedback
         document.querySelectorAll('.cat-badge').forEach(b => b.classList.remove('active'));
         this.classList.add('active');
 
-        // Kategorie speichern und Suche auslösen
-        currentCategory = this.innerText.replace(/[^a-zA-Z &]/g, '').trim(); // Entfernt Emojis für die DB-Abfrage
-        if (this.innerText === 'Alles') currentCategory = 'Alles';
+        // 2. Text bereinigen
+        // Wir entfernen Emojis und nehmen den reinen Text
+        let rawText = this.innerText;
         
+        // Spezialfall: Wenn Emojis drin sind, schneiden wir sie ab oder mappen sie
+        let categoryToSearch = rawText;
+        if (rawText.includes("🍎")) categoryToSearch = "Obst & Gemüse";
+        if (rawText.includes("🍞")) categoryToSearch = "Backwaren";
+        if (rawText.includes("🥛")) categoryToSearch = "Kühlregal";
+        if (rawText.includes("🥫")) categoryToSearch = "Vorrat";
+        if (rawText.includes("🍫")) categoryToSearch = "Snacks & Süßwaren";
+        if (rawText.includes("🍽️")) categoryToSearch = "Sonstiges";
+        if (rawText === "Alles") categoryToSearch = "Alles";
+
+        currentCategory = categoryToSearch;
+        
+        // Suche neu ausführen
         const term = document.getElementById('searchBar').value;
         loadPosts(term, currentCategory);
     });
