@@ -58,7 +58,7 @@ async function loadPosts() {
   
     foodFeed.innerHTML = `
         <div style="text-align:center; padding:50px;">
-            <span style="font-size:3rem; display:block; margin-bottom:10px;">🍲</span>
+            <span style="font-size:3rem; display:block; margin-bottom:10px; align: center;">🍲</span>
             <p>Leckeres Essen wird geladen...</p>
         </div>
     `;
