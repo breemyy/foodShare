@@ -58,19 +58,26 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
 }
 
 .cat-badge {
-    background: white;
-    padding: 8px 16px;
+    padding: 8px 15px;
+    background: #f0f0f0;
     border-radius: 20px;
-    border: 1px solid #dfe6e9;
-    white-space: nowrap;
     cursor: pointer;
-    transition: 0.3s;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
 }
 
 .cat-badge:hover, .cat-badge.active {
     background: var(--primary-green);
     color: white;
     border-color: var(--primary-green);
+}
+.categories {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto; /* Scrollbar für viele Kategorien am Handy */
+    padding: 10px 0;
+    scrollbar-width: none; /* Versteckt Scrollbar am PC */
 }
 
 .grid-feed {
