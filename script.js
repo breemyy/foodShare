@@ -547,3 +547,63 @@ document.querySelectorAll('.cat-badge').forEach(badge => {
         loadPosts(term, currentCategory);
     });
 });
+
+
+
+/////////////////////////////////////////
+///////////////SETTINGS//////////////////
+/////////////////////////////////////////
+
+// Öffnen
+const settingsBtn = document.getElementById('settingsBtn');
+if (settingsBtn) {
+    settingsBtn.onclick = () => {
+        document.getElementById('settingsDrawer').classList.add('open');
+        document.getElementById('drawerOverlay').style.display = 'block';
+    };
+}
+
+// Schließen
+function closeSettings() {
+    document.getElementById('settingsDrawer').classList.remove('open');
+    document.getElementById('drawerOverlay').style.display = 'none';
+}
+
+// 1. Username ändern per Prompt (einfachste Lösung)
+async function changeUsername() {
+    const newName = prompt("Gib deinen neuen Usernamen ein:");
+    if (!newName) return;
+
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    const { error } = await supabaseClient
+        .from('profiles')
+        .update({ username: newName })
+        .eq('id', user.id);
+
+    if (!error) {
+        document.getElementById('usernameDisplay').innerText = newName;
+        showPopup("Username erfolgreich geändert!");
+    }
+}
+
+// 2. Passwort Reset E-Mail
+async function requestPasswordReset() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(user.email);
+    
+    if (!error) {
+        showPopup("Check deine E-Mails zum Zurücksetzen! 📧");
+    }
+}
+
+// 3. Darkmode Toggle
+function toggleDarkMode() {
+    const isDark = document.getElementById('darkModeToggle').checked;
+    if (isDark) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+    }
+}
