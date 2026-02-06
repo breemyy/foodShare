@@ -56,10 +56,15 @@ fileInput.addEventListener('change', (e) => {
 
 async function loadPosts() {
   
+    foodFeed.style.display = 'flex';
+    foodFeed.style.justifyContent = 'center';
+    foodFeed.style.alignItems = 'center';
+    foodFeed.style.minHeight = '300px'; // Damit es nicht ganz oben klebt
+    
     foodFeed.innerHTML = `
-        <div style="text-align:center; padding:50px;">
-            <span style="font-size:3rem; display:block; margin-bottom:10px; align: center;">🍲</span>
-            <p>Leckeres Essen wird geladen...</p>
+        <div style="text-align:center;">
+            <span style="font-size: 3rem; display: block; margin-bottom: 10px; animation: bounce 1s infinite;">🍲</span>
+            <p style="font-weight:bold; color:#2ecc71; margin:0;">Leckeres Essen wird geladen...</p>
         </div>
     `;
     const { data, error } = await supabaseClient
@@ -71,14 +76,15 @@ async function loadPosts() {
 
     if (error) {
         console.error("Fehler beim Laden der Posts:", error);
-        postContainer.innerHTML = '<p>Fehler beim Laden der Speisen.</p>';
+        foodFeed.innerHTML = '<p>Fehler beim Laden der Speisen.</p>';
         return;
     }
     
+    foodFeed.style.display = 'grid'; // Oder 'block', je nach deinem CSS
     foodFeed.innerHTML = '';
 
     if (data.length === 0) {
-        postContainer.innerHTML = '<p style="text-align:center;">Aktuell gibt es leider kein Essen in deiner Nähe.</p>';
+        foodFeed.innerHTML = '<p style="text-align:center;">Aktuell gibt es leider kein Essen in deiner Nähe.</p>';
         return;
     }
 
