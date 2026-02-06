@@ -54,7 +54,9 @@ fileInput.addEventListener('change', (e) => {
     if (file) reader.readAsDataURL(file);
 });
 
-async function loadPosts() {
+async function loadPosts(searchTerm = "", category = "Alles") {
+    const foodFeed = document.getElementById('foodFeed');
+    if (!foodFeed) return;
   
     foodFeed.style.display = 'flex';
     foodFeed.style.justifyContent = 'center';
@@ -67,12 +69,21 @@ async function loadPosts() {
             <p style="font-weight:bold; color:#2ecc71; margin:0;">Leckeres Essen wird geladen...</p>
         </div>
     `;
-    const { data, error } = await supabaseClient
+    let query = supabaseClient
         .from('posts')
-        .select(`
-            *,
-            profiles ( username )
-        `);
+        .select(`*, profiles ( username )`);
+
+    // Filter 1: Textsuche (Titel)
+    if (searchTerm) {
+        query = query.ilike('title', `%${searchTerm}%`);
+    }
+
+    // Filter 2: Kategorie (wenn nicht "Alles" gewählt ist)
+    if (category !== "Alles") {
+        query = query.eq('category', category);
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false });
 
     if (error) {
         console.error("Fehler beim Laden der Posts:", error);
@@ -490,3 +501,37 @@ async function checkUnreadMessages() {
 
 // Intervall starten, damit der Punkt auch erscheint, wenn man nicht neu lädt
 setInterval(checkUnreadMessages, 10000); // Alle 10 Sekunden prüfen
+
+/////////////////////////////////////
+////////////SUCHFUNKTION/////////////
+/////////////////////////////////////
+
+let currentCategory = 'Alles';
+let searchTimeout;
+
+// 1. Funktion für die Texteingabe (Searchbar)
+const searchBar = document.getElementById('searchBar');
+if (searchBar) {
+    searchBar.addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            loadPosts(searchBar.value, currentCategory);
+        }, 400);
+    });
+}
+
+// 2. Logik für die Kategorie-Badges
+document.querySelectorAll('.cat-badge').forEach(badge => {
+    badge.addEventListener('click', function() {
+        // Optisches Feedback: 'active' Klasse verschieben
+        document.querySelectorAll('.cat-badge').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        // Kategorie speichern und Suche auslösen
+        currentCategory = this.innerText.replace(/[^a-zA-Z &]/g, '').trim(); // Entfernt Emojis für die DB-Abfrage
+        if (this.innerText === 'Alles') currentCategory = 'Alles';
+        
+        const term = document.getElementById('searchBar').value;
+        loadPosts(term, currentCategory);
+    });
+});
