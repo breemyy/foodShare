@@ -139,6 +139,15 @@
         document.getElementById('drawerOverlay').style.display = 'none';
     }
 
+    // Prüfen, ob Darkmode im Speicher ist
+    const currentTheme = localStorage.getItem('theme');
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (darkModeToggle) darkModeToggle.checked = true;
+    }
+
     initProfile();
 </script>
 </body>
