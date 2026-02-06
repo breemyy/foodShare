@@ -7,6 +7,50 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<header>
+    <div style="position: absolute; top: 20px; right: 20px; z-index: 1001;">
+    <span id="settingsBtn" style="font-size: 1.8rem; cursor: pointer;">⚙️</span>
+</div>
+</header>
+
+<div id="settingsDrawer" class="settings-drawer">
+    <div class="drawer-header">
+        <h2>Einstellungen</h2>
+        <span onclick="closeSettings()" style="cursor:pointer; font-size: 1.5rem;">✕</span>
+    </div>
+
+    <div class="drawer-content">
+        <div class="setting-row" onclick="changeUsername()">
+            <span>Username ändern</span>
+            <i class="fas fa-chevron-right"></i>
+        </div>
+
+        <div class="setting-row" onclick="requestPasswordReset()">
+            <span>Passwort ändern</span>
+            <i class="fas fa-chevron-right"></i>
+        </div>
+
+        <div class="setting-row">
+            <span>Darkmode</span>
+            <label class="switch">
+                <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <div class="setting-row">
+            <span>Benachrichtigungen</span>
+            <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <button class="logout-btn-simple" onclick="handleSignOut()">Abmelden</button>
+    </div>
+</div>
+
+<div id="drawerOverlay" class="drawer-overlay" onclick="closeSettings()"></div>
 
 <div class="profile-container">
     
