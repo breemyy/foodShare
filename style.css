@@ -681,3 +681,22 @@ body.dark-mode h2,
 body.dark-mode p {
     color: #ffffff !important;
 }
+
+/* Die Karten selbst */
+body.dark-mode .food-card {
+    background-color: #1e1e1e !important;
+    border: 1px solid #333 !important;
+    color: #ffffff !important;
+}
+
+/* Texte innerhalb der Karten */
+body.dark-mode .food-card h3, 
+body.dark-mode .food-card p,
+body.dark-mode .food-card .card-info {
+    color: #e0e0e0 !important;
+}
+
+/* Das untere weiße Feld in der Karte (falls es ein separates Div ist) */
+body.dark-mode .food-card-content {
+    background-color: #1e1e1e !important;
+}
