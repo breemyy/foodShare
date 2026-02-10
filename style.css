@@ -39,13 +39,7 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
     padding: 20px;
 }
 
-.search-container {
-    width: 100%;
-    max-width: 600px; 
-    margin: 20px auto;
-    padding: 0 10px;
-    box-sizing: border-box;
-}
+.search-container { margin-bottom: 25px; }
 
 #searchBar {
     width: 100%;
@@ -55,14 +49,10 @@ header p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
     font-size: 1.1rem;
     outline: none;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    display: block;
-    margin: 0 auto;
 }
 
 #mainSearch:focus {
     box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
-    display: block;
-    margin: 0 auto;
 }
 
 .categories {
